@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaudhary Oil Agencies - Solar & Automotive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e0f2fe; /* Light blue background */
+            color: #334155; /* Darker text for readability */
+        }
+        .header-bg {
+            background-color: #0d47a1; /* Darker blue for header */
+            color: #ffffff;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .nav-item {
+            position: relative;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease-in-out;
+            color: #ffffff; /* White text for nav items */
+            font-weight: 500;
+        }
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .section-title {
+            font-size: 2.5rem; /* Larger title */
+            font-weight: 700;
+            color: #1a202c; /* Very dark gray */
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .product-card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .product-card img {
+            height: 200px; /* Slightly taller images */
+            object-fit: cover;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .product-card .p-4 {
+            padding: 1.5rem;
+        }
+        .product-name {
+            font-size: 1.5rem; /* Larger product name */
+            font-weight: 600;
+            color: #1a202c;
+        }
+        .product-category {
+            color: #64748b; /* Muted category text */
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        .product-price {
+            font-size: 2.25rem; /* Bigger price */
+            font-weight: 700;
+            color: #10b981; /* Vibrant green */
+            margin-top: 1rem;
+        }
+        .btn {
+            padding: 0.85rem 1.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .btn-primary {
+            background-color: #2563eb; /* Blue */
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* Darker blue */
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: #e2e8f0; /* Light gray */
+            color: #4a5568;
+            border: none; /* Removed border */
+        }
+        .btn-secondary:hover {
+            background-color: #cbd5e0; /* Darker gray */
+            transform: translateY(-1px);
+        }
+        .filter-button.active {
+            background-color: #10b981; /* Green for active filter */
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #cbd5e0;
+            background-color: #f8fafc;
+            color: #334155;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+        .thumbnail-image {
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        .thumbnail-image.active {
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <div class="max-w-7xl mx-auto">
+        <header class="header-bg rounded-lg mb-12 py-4 px-6 md:px-10 flex justify-between items-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-white">Chaudhary Oil Agencies</h1>
+            <nav class="flex items-center space-x-6">
+                <a href="#" class="nav-item" id="products-link">Products</a>
+                <a href="#" class="nav-item" id="contact-link">Contact Us</a>
+                <a href="#" class="nav-item" id="about-link">About Us</a>
+                <a href="#" class="nav-item" id="admin-link">Admin</a>
+                <a href="#" class="nav-item relative" id="cart-link">
+                    Cart (<span id="cart-count">0</span>)
+                </a>
+            </nav>
+        </header>
+
+        <section id="product-gallery-section">
+            <h2 class="section-title">Our Products</h2>
+            <div class="flex space-x-4 mb-8 justify-center" id="filter-buttons">
+                <button class="btn btn-secondary filter-button active" data-filter="all">All</button>
+                <button class="btn btn-secondary filter-button" data-filter="solar">Solar</button>
+                <button class="btn btn-secondary filter-button" data-filter="automotive">Automotive</button>
+            </div>
+            <div id="product-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                </div>
+        </section>
+
+        <section id="product-details-section" class="hidden">
+            <button id="back-to-products-btn" class="btn btn-secondary mb-8">&larr; Back to Products</button>
+            <div class="bg-white p-8 rounded-lg shadow-md md:flex md:space-x-8">
+                <div class="md:w-1/2">
+                    <img id="product-main-image" src="" alt="" class="w-full h-auto rounded-lg mb-4">
+                    <div id="product-thumbnails" class="flex space-x-2 overflow-x-auto">
+                        </div>
+                </div>
+                <div class="md:w-1/2 mt-8 md:mt-0">
+                    <h1 id="product-details-name" class="text-3xl font-bold text-gray-800"></h1>
+                    <p id="product-details-category" class="text-lg text-gray-600 mt-2"></p>
+                    <p id="product-details-price" class="text-4xl font-bold text-green-600 my-4"></p>
+                    <p id="product-details-description" class="text-gray-700 leading-relaxed"></p>
+                    <button id="add-to-cart-details-btn" class="btn btn-primary w-full mt-8">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="checkout-section" class="hidden mb-12">
+            <h2 class="section-title">Checkout</h2>
+            <div class="form-container md:flex md:space-x-8">
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
+                    <div id="checkout-summary" class="space-y-4 text-base">
+                        </div>
+                    <div id="checkout-total" class="mt-6 text-right text-2xl font-bold text-gray-800 border-t pt-6">
+                        Total: ₹0
+                    </div>
+                </div>
+                <div class="md:w-1/2 mt-10 md:mt-0">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Customer Information</h3>
+                    <form id="checkout-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                            <input type="text" id="name" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="address" class="block text-gray-700 font-medium mb-2">Shipping Address</label>
+                            <input type="text" id="address" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-6">Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-section" class="hidden mb-12">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="form-container max-w-2xl mx-auto">
+                <p class="text-gray-600 mb-6 text-lg text-center">Have a question or need a quote? Fill out the form below and we'll get back to you as soon as possible.</p>
+                <form id="contact-form" class="space-y-4">
+                    <div>
+                        <label for="contact-name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                        <input type="text" id="contact-name" class="form-input" required>
+                    </div>
+                    <div>
+                        <label for="contact-email" class="block text-gray-700 font-medium mb-2">Your Email</label>
+                        <input type="email" id="contact-email" class="form-input" required>
+                    </div>
+                    <div>
+                        <label for="contact-message" class="block text-gray-700 font-medium mb-2">Your Message</label>
+                        <textarea id="contact-message" rows="5" class="form-textarea" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-6">Send Message</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="about-section" class="hidden mb-12">
+            <h2 class="section-title">About Us</h2>
+            <div class="form-container max-w-3xl mx-auto text-center">
+                <p class="text-xl text-gray-800 mb-6 leading-relaxed">
+                    Welcome to Chaudhary Oil Agencies! We are dedicated to providing high-quality solar energy and automotive products to help you transition to a cleaner, more sustainable future and keep your vehicles running smoothly.
+                </p>
+                <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                    Our mission is to make sustainable power accessible and affordable for everyone. We believe that by offering top-tier products and excellent service, we can empower our community to reduce its carbon footprint and ensure reliable performance.
+                </p>
+                <p class="text-lg text-gray-600 leading-relaxed">
+                    From high-efficiency solar panels to reliable inverters, batteries, and a wide range of automotive essentials, our product selection is curated to meet the diverse needs of both residential, commercial, and vehicle owners.
+                </p>
+            </div>
+        </section>
+
+        <section id="admin-section" class="hidden mb-12">
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div id="admin-login-prompt" class="form-container max-w-md mx-auto">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Owner Login</h3>
+                <form id="admin-login-form" class="space-y-4">
+                    <div>
+                        <label for="admin-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                        <input type="password" id="admin-password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-4">Login to Admin</button>
+                    <p id="admin-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
+                </form>
+            </div>
+            
+            <div id="admin-content" class="hidden">
+                <div class="form-container mb-10">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Add New Product</h3>
+                    <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label for="new-product-name" class="block text-gray-700 font-medium mb-2">Product Name</label>
+                            <input type="text" id="new-product-name" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="new-product-price" class="block text-gray-700 font-medium mb-2">Price (₹)</label>
+                            <input type="number" id="new-product-price" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="new-product-category" class="block text-gray-700 font-medium mb-2">Category</label>
+                            <select id="new-product-category" class="form-select" required>
+                                <option value="solar">Solar</option>
+                                <option value="automotive">Automotive</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="new-product-image-1" class="block text-gray-700 font-medium mb-2">Image URL 1 (Main)</label>
+                            <input type="url" id="new-product-image-1" class="form-input" placeholder="https://via.placeholder.com/400x300" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="new-product-image-2" class="block text-gray-700 font-medium mb-2">Image URL 2</label>
+                            <input type="url" id="new-product-image-2" class="form-input" placeholder="(Optional)">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="new-product-image-3" class="block text-gray-700 font-medium mb-2">Image URL 3</label>
+                            <input type="url" id="new-product-image-3" class="form-input" placeholder="(Optional)">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="new-product-description" class="block text-gray-700 font-medium mb-2">Product Description</label>
+                            <textarea id="new-product-description" rows="4" class="form-input" required></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="btn btn-primary w-full mt-4">Add Product</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="form-container">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Manage Products</h3>
+                    <div id="admin-product-list" class="space-y-4">
+                        </div>
+                </div>
+                <button id="admin-logout-btn" class="btn btn-secondary w-full max-w-xs mx-auto block mt-8">Logout Admin</button>
+            </div>
+        </section>
+
+        <div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
+            <div class="modal-content w-full max-w-lg p-8">
+                <div class="text-center">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-6">Your Shopping Cart</h3>
+                    <div id="cart-items" class="mt-4 text-left space-y-4 max-h-96 overflow-y-auto pr-2">
+                        </div>
+                    <div id="cart-total" class="mt-8 text-right text-2xl font-bold text-gray-800 border-t pt-6">
+                        Total: ₹0
+                    </div>
+                    <div class="mt-10 flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button id="close-cart-btn" class="btn btn-secondary flex-1">Continue Shopping</button>
+                        <button id="checkout-btn" class="btn btn-primary flex-1">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'password123';
+        
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            { 
+                id: 1, 
+                name: '550W Monocrystalline Solar Panel', 
+                price: 18500, 
+                category: 'solar', 
+                imageUrls: ['https://images.unsplash.com/photo-1549646440-c11f185c697b?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://images.unsplash.com/photo-1582268710574-e35f524c7f0d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'This high-efficiency solar panel is perfect for maximizing energy output in all weather conditions. Built with durable materials, it offers long-lasting performance for residential and commercial installations.'
+            },
+            { 
+                id: 2, 
+                name: '5kW Solar Inverter', 
+                price: 45000, 
+                category: 'solar', 
+                imageUrls: ['https://images.unsplash.com/photo-1563901967205-0219c6ce1992?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'Our 5kW solar inverter is designed for seamless integration into your solar system. It efficiently converts solar power into usable electricity, ensuring your home or business runs smoothly.'
+            },
+            { 
+                id: 3, 
+                name: '200Ah Solar Battery', 
+                price: 22000, 
+                category: 'solar', 
+                imageUrls: ['https://images.unsplash.com/photo-1598449339077-512534a65499?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'A powerful and reliable 200Ah solar battery for energy storage and backup. Perfect for ensuring you have power even when the sun isn\'t shining.'
+            },
+            { 
+                id: 4, 
+                name: 'Standard Solar Panel Mounting Structure', 
+                price: 8000, 
+                category: 'solar', 
+                imageUrls: ['https://images.unsplash.com/photo-1620216117970-d29b2f6f32e2?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'A durable and easy-to-install aluminum structure for mounting solar panels on your rooftop.'
+            },
+            { 
+                id: 5, 
+                name: '12V Automotive Battery', 
+                price: 5500, 
+                category: 'automotive', 
+                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'A reliable 12V battery for all your automotive needs, providing consistent power for your vehicle\'s engine and electrical system.'
+            },
+            { 
+                id: 6, 
+                name: '80Ah Car Battery', 
+                price: 7200, 
+                category: 'automotive', 
+                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'This 80Ah car battery offers superior performance and a long lifespan, ensuring your vehicle starts reliably in all conditions.'
+            },
+            { 
+                id: 7, 
+                name: 'Bike Battery', 
+                price: 1800, 
+                category: 'automotive', 
+                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+                description: 'A compact and durable battery designed specifically for motorcycles and bikes, providing a dependable power source on the road.'
+            }
+        ];
+        
+        const cartCountElement = document.getElementById('cart-count');
+        const productGallery = document.getElementById('product-gallery');
+        const productDetailsSection = document.getElementById('product-details-section');
+        const backToProductsBtn = document.getElementById('back-to-products-btn');
+        const productMainImage = document.getElementById('product-main-image');
+        const productThumbnails = document.getElementById('product-thumbnails');
+        const productDetailsName = document.getElementById('product-details-name');
+        const productDetailsCategory = document.getElementById('product-details-category');
+        const productDetailsPrice = document.getElementById('product-details-price');
+        const productDetailsDescription = document.getElementById('product-details-description');
+        const addToCartDetailsBtn = document.getElementById('add-to-cart-details-btn');
+        const cartModal = document.getElementById('cart-modal');
+        const closeCartBtn = document.getElementById('close-cart-btn');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const cartLink = document.getElementById('cart-link');
+        const modalCheckoutBtn = document.getElementById('checkout-btn');
+        const productGallerySection = document.getElementById('product-gallery-section');
+        const checkoutSection = document.getElementById('checkout-section');
+        const contactSection = document.getElementById('contact-section');
+        const aboutSection = document.getElementById('about-section');
+        const adminSection = document.getElementById('admin-section');
+        const productsLink = document.getElementById('products-link');
+        const contactLink = document.getElementById('contact-link');
+        const aboutLink = document.getElementById('about-link');
+        const adminLink = document.getElementById('admin-link');
+        const checkoutSummary = document.getElementById('checkout-summary');
+        const checkoutTotal = document.getElementById('checkout-total');
+        const checkoutForm = document.getElementById('checkout-form');
+        const contactForm = document.getElementById('contact-form');
+        const filterButtons = document.getElementById('filter-buttons');
+        const addProductForm = document.getElementById('add-product-form');
+        const adminProductList = document.getElementById('admin-product-list');
+        const adminLoginPrompt = document.getElementById('admin-login-prompt');
+        const adminLoginForm = document.getElementById('admin-login-form');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const adminLoginError = document.getElementById('admin-login-error');
+        const adminContent = document.getElementById('admin-content');
+        const adminLogoutBtn = document.getElementById('admin-logout-btn');
+
+        let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
+        
+        const showSection = (sectionId) => {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+
+            if (sectionId === 'admin-section') {
+                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                    adminLoginPrompt.classList.add('hidden');
+                    adminContent.classList.remove('hidden');
+                    renderAdminProducts();
+                } else {
+                    adminLoginPrompt.classList.remove('hidden');
+                    adminContent.classList.add('hidden');
+                    adminLoginError.classList.add('hidden');
+                    adminLoginForm.reset();
+                }
+            }
+        };
+
+        const saveProducts = () => {
+            localStorage.setItem('products', JSON.stringify(products));
+            renderProducts();
+            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                renderAdminProducts();
+            }
+        };
+
+        const renderProducts = (filter = 'all') => {
+            productGallery.innerHTML = '';
+            const filteredProducts = products.filter(product => {
+                return filter === 'all' || product.category === filter;
+            });
+        
+            if (filteredProducts.length === 0) {
+                productGallery.innerHTML = `<p class="text-center text-gray-600 text-lg col-span-full">No products found in this category.</p>`;
+            }
+        
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <a href="#" class="product-link" data-product-id="${product.id}">
+                        <img src="${product.imageUrls[0]}" alt="${product.name}" class="w-full">
+                    </a>
+                    <div class="p-4">
+                        <a href="#" class="product-link" data-product-id="${product.id}">
+                            <h3 class="product-name">${product.name}</h3>
+                        </a>
+                        <p class="product-category">Category: ${product.category}</p>
+                        <p class="product-price">₹${product.price.toLocaleString('en-IN')}</p>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <button class="add-to-cart-btn btn w-full btn-primary" data-product-id="${product.id}">Add to Cart</button>
+                    </div>
+                `;
+                productGallery.appendChild(productCard);
+            });
+        };
+
+        const renderProductDetails = (productId) => {
+            const product = products.find(p => p.id == productId);
+            if (!product) return;
+        
+            productMainImage.src = product.imageUrls[0];
+            productMainImage.alt = product.name;
+            productDetailsName.textContent = product.name;
+            productDetailsCategory.textContent = `Category: ${product.category}`;
+            productDetailsPrice.textContent = `₹${product.price.toLocaleString('en-IN')}`;
+            productDetailsDescription.textContent = product.description;
+            addToCartDetailsBtn.dataset.productId = product.id;
+        
+            productThumbnails.innerHTML = '';
+            product.imageUrls.forEach((url, index) => {
+                if (url) {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `${product.name} thumbnail ${index + 1}`;
+                    img.className = `w-16 h-16 rounded-md object-cover thumbnail-image ${index === 0 ? 'active' : ''}`;
+                    img.dataset.url = url;
+                    productThumbnails.appendChild(img);
+                }
+            });
+            showSection('product-details-section');
+        };
+
+        const renderAdminProducts = () => {
+            adminProductList.innerHTML = '';
+            if (products.length === 0) {
+                adminProductList.innerHTML = `<p class="text-center text-gray-600">No products added yet.</p>`;
+            }
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm';
+                productItem.innerHTML = `
+                    <div class="flex-1 mr-4">
+                        <p class="font-semibold text-gray-800">${product.name}</p>
+                        <p class="text-sm text-gray-600">₹${product.price.toLocaleString('en-IN')} | Category: ${product.category}</p>
+                    </div>
+                    <button class="btn btn-secondary delete-product-btn" data-product-id="${product.id}">Delete</button>
+                `;
+                adminProductList.appendChild(productItem);
+            });
+        };
+
+        const addToCart = (productId) => {
+            const product = products.find(p => p.id == productId);
+            if (!product) return;
+            
+            if (cart[productId]) {
+                cart[productId].quantity++;
+            } else {
+                cart[productId] = { ...product, quantity: 1, imageUrl: product.imageUrls[0] };
+            }
+            saveCart();
+        };
+
+        const saveCart = () => {
+            localStorage.setItem('solarCart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+        };
+
+        const increaseQuantity = (productId) => {
+            if (cart[productId]) {
+                cart[productId].quantity++;
+                saveCart();
+            }
+        };
+
+        const decreaseQuantity = (productId) => {
+            if (cart[productId] && cart[productId].quantity > 1) {
+                cart[productId].quantity--;
+                saveCart();
+            }
+        };
+
+        const removeItem = (productId) => {
+            delete cart[productId];
+            saveCart();
+        };
+
+        const updateCartCount = () => {
+            let totalItems = 0;
+            for (const productId in cart) {
+                totalItems += cart[productId].quantity;
+            }
+            cartCountElement.textContent = totalItems;
+        };
+
+        const renderCart = () => {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            
+            if (Object.keys(cart).length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-center text-gray-500 py-4">Your cart is empty. Add some products!</p>`;
+                modalCheckoutBtn.disabled = true;
+                modalCheckoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                modalCheckoutBtn.disabled = false;
+                modalCheckoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                for (const id in cart) {
+                    const item = cart[id];
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex items-center py-3 border-b border-gray-200 last:border-b-0';
+                    itemElement.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.name}" class="w-16 h-16 rounded-md mr-4 object-cover">
+                        <div class="flex-1 text-sm">
+                            <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                            <p class="text-gray-600">₹${item.price.toLocaleString('en-IN')} each</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="text-xl font-bold text-gray-500 hover:text-gray-800 focus:outline-none" data-action="decrease" data-product-id="${item.id}">-</button>
+                            <span class="font-bold w-6 text-center text-gray-800">${item.quantity}</span>
+                            <button class="text-xl font-bold text-gray-500 hover:text-gray-800 focus:outline-none" data-action="increase" data-product-id="${item.id}">+</button>
+                        </div>
+                        <button class="ml-4 text-red-500 hover:text-red-700 focus:outline-none" data-action="remove" data-product-id="${item.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.728-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                }
+            }
+            
+            cartTotalElement.textContent = `Total: ₹${total.toLocaleString('en-IN')}`;
+        };
+
+        const renderCheckoutSummary = () => {
+            checkoutSummary.innerHTML = '';
+            let total = 0;
+            
+            if (Object.keys(cart).length === 0) {
+                checkoutSummary.innerHTML = `<p class="text-center text-gray-500 py-4">Your cart is empty.</p>`;
+            } else {
+                for (const id in cart) {
+                    const item = cart[id];
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center py-2';
+                    itemElement.innerHTML = `
+                        <p class="font-semibold text-gray-800">${item.name} <span class="text-gray-500 text-sm">x${item.quantity}</span></p>
+                        <p class="font-semibold text-gray-800">₹${itemTotal.toLocaleString('en-IN')}</p>
+                    `;
+                    checkoutSummary.appendChild(itemElement);
+                }
+            }
+            checkoutTotal.textContent = `Total: ₹${total.toLocaleString('en-IN')}`;
+        };
+
+        // Event Listeners for Nav Links
+        productsLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('product-gallery-section');
+        });
+        
+        contactLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('contact-section');
+        });
+        
+        aboutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('about-section');
+        });
+        
+        adminLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('admin-section');
+        });
+        
+        productGallery.addEventListener('click', (e) => {
+            const productLink = e.target.closest('.product-link');
+            if (productLink) {
+                e.preventDefault();
+                const productId = productLink.dataset.productId;
+                renderProductDetails(productId);
+            } else if (e.target.classList.contains('add-to-cart-btn')) {
+                const productId = e.target.dataset.productId;
+                addToCart(productId);
+            }
+        });
+        
+        filterButtons.addEventListener('click', (e) => {
+            const filter = e.target.dataset.filter;
+            if (filter) {
+                renderProducts(filter);
+                document.querySelectorAll('#filter-buttons .filter-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+            }
+        });
+
+        cartLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderCart();
+            cartModal.classList.remove('hidden');
+        });
+
+        closeCartBtn.addEventListener('click', () => {
+            cartModal.classList.add('hidden');
+        });
+
+        cartItemsContainer.addEventListener('click', (e) => {
+            const action = e.target.dataset.action || e.target.closest('button')?.dataset.action;
+            const productId = e.target.dataset.productId || e.target.closest('button')?.dataset.productId;
+            
+            if (action && productId) {
+                if (action === 'increase') {
+                    increaseQuantity(productId);
+                } else if (action === 'decrease') {
+                    decreaseQuantity(productId);
+                } else if (action === 'remove') {
+                    removeItem(productId);
+                }
+            }
+        });
+
+        modalCheckoutBtn.addEventListener('click', () => {
+            cartModal.classList.add('hidden');
+            renderCheckoutSummary();
+            showSection('checkout-section');
+        });
+        
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (adminPasswordInput.value === ADMIN_PASSWORD) {
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                adminLoginError.classList.add('hidden');
+                showSection('admin-section');
+            } else {
+                adminLoginError.classList.remove('hidden');
+            }
+        });
+
+        adminLogoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isAdminLoggedIn');
+            showSection('product-gallery-section');
+        });
+
+        addProductForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newProduct = {
+                id: Date.now(),
+                name: addProductForm['new-product-name'].value,
+                price: parseFloat(addProductForm['new-product-price'].value),
+                category: addProductForm['new-product-category'].value,
+                imageUrls: [
+                    addProductForm['new-product-image-1'].value,
+                    addProductForm['new-product-image-2'].value,
+                    addProductForm['new-product-image-3'].value
+                ].filter(url => url),
+                description: addProductForm['new-product-description'].value
+            };
+            products.push(newProduct);
+            saveProducts();
+            addProductForm.reset();
+        });
+
+        adminProductList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-product-btn')) {
+                const productId = parseInt(e.target.dataset.productId);
+                products = products.filter(p => p.id !== productId);
+                saveProducts();
+            }
+        });
+        
+        checkoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your order! It has been placed successfully.');
+            localStorage.removeItem('solarCart');
+            cart = {};
+            updateCartCount();
+            showSection('product-gallery-section');
+        });
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            contactForm.reset();
+        });
+
+        backToProductsBtn.addEventListener('click', () => {
+            showSection('product-gallery-section');
+        });
+        
+        addToCartDetailsBtn.addEventListener('click', (e) => {
+            const productId = e.target.dataset.productId;
+            addToCart(productId);
+            alert('Product added to cart!');
+        });
+
+        productThumbnails.addEventListener('click', (e) => {
+            if (e.target.tagName === 'IMG') {
+                document.querySelectorAll('.thumbnail-image').forEach(img => img.classList.remove('active'));
+                e.target.classList.add('active');
+                productMainImage.src = e.target.dataset.url;
+            }
+        });
+
+        // Initial rendering on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            updateCartCount();
+            document.querySelector('#filter-buttons .filter-button[data-filter="all"]').classList.add('active');
+        });
+    </script>
+</body>
+</html>
