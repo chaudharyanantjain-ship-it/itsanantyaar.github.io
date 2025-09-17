@@ -1210,20 +1210,30 @@
             const password = adminPasswordInput.value;
             adminLoginError.classList.add('hidden');
             if (password === ADMIN_PASSWORD) {
+                const adminEmail = 'admin@yourcompany.com';
+                const adminPass = 'admin_password_placeholder'; // Placeholder for security
                 try {
-                    // Check if an admin user already exists, or create one if not
-                    const adminDocRef = doc(db, 'users', 'admin');
-                    const adminDoc = await getDoc(adminDocRef);
-                    if (!adminDoc.exists()) {
-                        await setDoc(adminDocRef, { role: 'admin' });
-                    }
-                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
+                    await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' });
                     loginModal.classList.add('hidden');
-                    showSection('admin-section');
+                    showMessageBox('Admin logged in successfully!');
                 } catch (error) {
-                     adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
-                     adminLoginError.classList.remove('hidden');
-                     console.error(error);
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                        try {
+                           const userCredential = await createUserWithEmailAndPassword(auth, adminEmail, adminPass);
+                           await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' });
+                           showMessageBox('Admin account created and logged in successfully!');
+                           loginModal.classList.add('hidden');
+                        } catch (creationError) {
+                            adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
+                            adminLoginError.classList.remove('hidden');
+                            console.error("Admin creation failed:", creationError);
+                        }
+                    } else {
+                        adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
+                        adminLoginError.classList.remove('hidden');
+                        console.error(error);
+                    }
                 }
             } else {
                 adminLoginError.textContent = 'Incorrect password.';
@@ -1232,8 +1242,8 @@
         });
 
         adminLogoutBtn.addEventListener('click', async () => {
-            localStorage.removeItem('isAdminLoggedIn');
-            showSection('products-link');
+            await signOut(auth);
+            showMessageBox('You have been logged out.');
         });
         
         dealersLoginForm.addEventListener('submit', async (e) => {
@@ -1246,9 +1256,8 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
                 if (userDoc.exists() && userDoc.data().role === 'dealer') {
-                    localStorage.setItem('isDealerLoggedIn', 'true');
                     loginModal.classList.add('hidden');
-                    showSection('dealers-section');
+                    showMessageBox('Dealer logged in successfully!');
                 } else {
                     await signOut(auth);
                     dealersLoginError.textContent = "Invalid email or password.";
@@ -1262,8 +1271,7 @@
         
         dealersLogoutBtn.addEventListener('click', async () => {
             await signOut(auth);
-            localStorage.removeItem('isDealerLoggedIn');
-            showSection('products-link');
+            showMessageBox('You have been logged out.');
         });
 
         createDealerForm.addEventListener('submit', async (e) => {
@@ -1381,10 +1389,7 @@
 
         logoutBtn.addEventListener('click', async () => {
             await signOut(auth);
-            localStorage.removeItem('isAdminLoggedIn');
-            localStorage.removeItem('isDealerLoggedIn');
             showMessageBox('You have been logged out.');
-            showSection('product-gallery-section');
         });
 
 
