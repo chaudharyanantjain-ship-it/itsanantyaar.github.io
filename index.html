@@ -1228,8 +1228,8 @@
                 try {
                     const adminEmail = 'admin@yourcompany.com';
                     const adminPass = 'admin_password_placeholder';
-                    const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
-                    await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' }, { merge: true });
+                    await signInWithEmailAndPassword(auth, adminEmail, adminPass);
+                    await setDoc(doc(db, 'users', auth.currentUser.uid), { role: 'admin' }, { merge: true });
                     loginModal.classList.add('hidden');
                     showMessageBox('Admin logged in successfully!');
                 } catch (error) {
