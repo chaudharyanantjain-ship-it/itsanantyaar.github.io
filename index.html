@@ -559,7 +559,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
@@ -627,6 +627,8 @@
         const showLoginFormBtn = document.getElementById('show-login-form');
         const consumerLoginForm = document.getElementById('consumer-login-form');
         const consumerSignupForm = document.getElementById('consumer-signup-form');
+        const consumerLoginErrorMsg = document.getElementById('consumer-login-error');
+        const consumerSignupErrorMsg = document.getElementById('consumer-signup-error');
         
         const otpForm = document.getElementById('otp-form');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -678,13 +680,14 @@
         // --- End custom message box function ---
 
         function updateNavLinks(userRole) {
+            // Hide all user-specific links by default
             productsLink.classList.remove('hidden');
             calculatorLink.classList.remove('hidden');
             contactLink.classList.remove('hidden');
             aboutLink.classList.remove('hidden');
+            cartLink.classList.add('hidden');
             adminLink.classList.add('hidden');
             dealersLink.classList.add('hidden');
-            cartLink.classList.add('hidden');
             logoutBtn.classList.add('hidden');
             loginBtn.classList.remove('hidden');
             
@@ -708,16 +711,14 @@
                 userId = user.uid;
                 try {
                     const userDoc = await getDoc(doc(db, 'users', userId));
+                    let userRole = 'consumer'; // Default to consumer
                     if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        updateNavLinks(userData.role);
-                        setupRealtimeListeners();
+                        userRole = userDoc.data().role;
                     } else {
-                        // Default role for new users
                         await setDoc(doc(db, 'users', userId), { role: 'consumer' });
-                        updateNavLinks('consumer');
-                        setupRealtimeListeners();
                     }
+                    updateNavLinks(userRole);
+                    setupRealtimeListeners();
                 } catch (error) {
                     console.error("Error fetching user role:", error);
                     showMessageBox("Error getting user information. Please try again.");
@@ -1086,49 +1087,54 @@
 
         loginBtn.addEventListener('click', () => {
             loginModal.classList.remove('hidden');
-        });
-
-        closeLoginModalBtn.addEventListener('click', () => {
-            loginModal.classList.add('hidden');
             loginOptionsContainer.classList.remove('hidden');
             consumerLoginCard.classList.add('hidden');
             consumerSignupCard.classList.add('hidden');
             otpLoginCard.classList.add('hidden');
             adminLoginCard.classList.add('hidden');
             dealerLoginCard.classList.add('hidden');
-            authErrorMessage.textContent = '';
+        });
+
+        closeLoginModalBtn.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
         });
         
         showConsumerLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             consumerLoginCard.classList.remove('hidden');
+            consumerLoginErrorMsg.textContent = '';
         });
 
         showOtpLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             otpLoginCard.classList.remove('hidden');
+            otpErrorMsg.textContent = '';
         });
 
         showAdminLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             adminLoginCard.classList.remove('hidden');
+            adminLoginError.textContent = '';
         });
 
         showDealerLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             dealerLoginCard.classList.remove('hidden');
+            dealersLoginError.textContent = '';
         });
 
         showSignupFormBtn.addEventListener('click', (e) => {
             e.preventDefault();
             consumerLoginCard.classList.add('hidden');
             consumerSignupCard.classList.remove('hidden');
+            consumerSignupErrorMsg.textContent = '';
         });
 
         showLoginFormBtn.addEventListener('click', (e) => {
             e.preventDefault();
             consumerSignupCard.classList.add('hidden');
             consumerLoginCard.classList.remove('hidden');
+            consumerLoginErrorMsg.textContent = '';
         });
 
         productGallery.addEventListener('click', (e) => {
@@ -1189,19 +1195,20 @@
         adminLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = adminPasswordInput.value;
+            adminLoginError.classList.add('hidden');
             if (password === ADMIN_PASSWORD) {
                 try {
                     await setDoc(doc(db, 'users', 'admin'), { role: 'admin' });
-                    // A simple email/pass sign-in for admin
-                    const adminCredential = await signInWithEmailAndPassword(auth, 'admin@yourcompany.com', 'admin_password_placeholder');
                     localStorage.setItem('isAdminLoggedIn', 'true');
                     loginModal.classList.add('hidden');
                     showSection('admin-section');
                 } catch (error) {
-                     adminLoginError.textContent = 'Invalid password or error logging in.';
+                     adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
                      adminLoginError.classList.remove('hidden');
+                     console.error(error);
                 }
             } else {
+                adminLoginError.textContent = 'Incorrect password.';
                 adminLoginError.classList.remove('hidden');
             }
         });
@@ -1262,7 +1269,7 @@
             e.preventDefault();
             const email = consumerSignupForm['signup-email'].value;
             const password = consumerSignupForm['signup-password'].value;
-            signupErrorMsg.classList.add('hidden');
+            consumerSignupErrorMsg.classList.add('hidden');
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -1270,8 +1277,8 @@
                 showMessageBox('Account created successfully! You are now logged in.');
                 loginModal.classList.add('hidden');
             } catch (error) {
-                signupErrorMsg.textContent = error.message;
-                signupErrorMsg.classList.remove('hidden');
+                consumerSignupErrorMsg.textContent = error.message;
+                consumerSignupErrorMsg.classList.remove('hidden');
             }
         });
 
@@ -1279,15 +1286,22 @@
             e.preventDefault();
             const email = consumerLoginForm['login-email'].value;
             const password = consumerLoginForm['login-password'].value;
-            loginErrorMsg.classList.add('hidden');
+            consumerLoginErrorMsg.classList.add('hidden');
 
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                showMessageBox('Logged in successfully!');
-                loginModal.classList.add('hidden');
+                const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+                if (userDoc.exists() && userDoc.data().role === 'consumer') {
+                    showMessageBox('Logged in successfully!');
+                    loginModal.classList.add('hidden');
+                } else {
+                    await signOut(auth);
+                    consumerLoginErrorMsg.textContent = "Invalid email or password.";
+                    consumerLoginErrorMsg.classList.remove('hidden');
+                }
             } catch (error) {
-                loginErrorMsg.textContent = error.message;
-                loginErrorMsg.classList.remove('hidden');
+                consumerLoginErrorMsg.textContent = error.message;
+                consumerLoginErrorMsg.classList.remove('hidden');
             }
         });
         
@@ -1332,7 +1346,12 @@
                 return;
             }
             try {
-                await confirmationResult.confirm(otpCode);
+                const result = await confirmationResult.confirm(otpCode);
+                const user = result.user;
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                if (!userDoc.exists()) {
+                    await setDoc(doc(db, 'users', user.uid), { role: 'consumer' });
+                }
                 showMessageBox('Logged in successfully!');
                 loginModal.classList.add('hidden');
             } catch (error) {
@@ -1587,18 +1606,6 @@
         // Initial rendering on page load
         document.addEventListener('DOMContentLoaded', () => {
             renderApplianceList(); // Render the appliance list on page load
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    userId = user.uid;
-                    updateNavLinks(true);
-                    setupRealtimeListeners();
-                } else {
-                    userId = null;
-                    updateNavLinks(false);
-                    // Re-render the public view
-                    showSection('product-gallery-section');
-                }
-            });
             updateCartCount();
             document.querySelector('#filter-buttons .filter-button[data-filter="all"]').classList.add('active');
         });
