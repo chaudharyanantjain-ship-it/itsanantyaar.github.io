@@ -6,160 +6,8 @@
     <title>Chaudhary Oil Agencies - Solar & Automotive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc; /* Lighter, more neutral background */
-            color: #334155; /* Darker text for readability */
-        }
-        .header-bg {
-            background-color: #0d47a1; /* Darker blue for header */
-            color: #ffffff;
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .nav-item {
-            position: relative;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            transition: all 0.2s ease-in-out;
-            color: #ffffff; /* White text for nav items */
-            font-weight: 500;
-        }
-        .nav-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        .section-title {
-            font-size: 2.5rem; /* Larger title */
-            font-weight: 700;
-            color: #1a202c; /* Very dark gray */
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .product-card {
-            background-color: #ffffff;
-            border-radius: 1rem; /* More rounded corners */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .product-card img {
-            height: 200px; /* Slightly taller images */
-            object-fit: cover;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .product-card .p-4 {
-            padding: 1.5rem;
-        }
-        .product-name {
-            font-size: 1.5rem; /* Larger product name */
-            font-weight: 600;
-            color: #1a202c;
-        }
-        .product-category {
-            color: #64748b; /* Muted category text */
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-        }
-        .product-price {
-            font-size: 2.25rem; /* Bigger price */
-            font-weight: 700;
-            color: #10b981; /* Vibrant green */
-            margin-top: 1rem;
-        }
-        .btn {
-            padding: 0.85rem 1.75rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: all 0.2s ease-in-out;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .btn-primary {
-            background-color: #2563eb; /* Blue */
-            color: #ffffff;
-        }
-        .btn-primary:hover {
-            background-color: #1d4ed8; /* Darker blue */
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background-color: #e2e8f0; /* Light gray */
-            color: #4a5568;
-            border: none; /* Removed border */
-        }
-        .btn-secondary:hover {
-            background-color: #cbd5e0; /* Darker gray */
-            transform: translateY(-1px);
-        }
-        .filter-button.active {
-            background-color: #10b981; /* Green for active filter */
-            color: #ffffff;
-            box-shadow: 0 4px 6px -1-px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
-        }
-        .form-container {
-            background-color: #ffffff;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .form-input, .form-textarea, .form-select {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid #cbd5e0;
-            background-color: #f8fafc;
-            color: #334155;
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-        }
-        .modal-content {
-            background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
-        }
-        .thumbnail-image {
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color 0.2s;
-        }
-        .thumbnail-image.active {
-            border-color: #2563eb;
-        }
-        .message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            z-index: 100;
-            text-align: center;
-        }
-        .message-box-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 99;
-        }
-    </style>
+    <!-- Link to our external CSS file -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="p-6 md:p-12">
     <div class="max-w-7xl mx-auto">
@@ -556,6 +404,7 @@
         &copy; 2025 Chaudhary Oil Agencies. All rights reserved.
     </footer>
 
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -582,6 +431,7 @@
         const ADMIN_PASSWORD = 'password123';
         let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
         
+        // Element references
         const cartCountElement = document.getElementById('cart-count');
         const productGallery = document.getElementById('product-gallery');
         const productDetailsSection = document.getElementById('product-details-section');
@@ -766,9 +616,18 @@
         }
         
         const showSection = (sectionId) => {
-            document.querySelectorAll('section').forEach(section => {
-                section.classList.add('hidden');
-            });
+            // First, hide all sections
+            document.getElementById('product-gallery-section').classList.add('hidden');
+            document.getElementById('product-details-section').classList.add('hidden');
+            document.getElementById('checkout-section').classList.add('hidden');
+            document.getElementById('solar-calculator-section').classList.add('hidden');
+            document.getElementById('contact-section').classList.add('hidden');
+            document.getElementById('about-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('dealers-section').classList.add('hidden');
+            document.getElementById('login-modal').classList.add('hidden');
+
+            // Then, show the requested section
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.remove('hidden');
@@ -808,7 +667,7 @@
         };
 
         const renderProductDetails = (productId) => {
-            const product = products.find(p => p.id == productId);
+            const product = products.find(p => product.id == productId);
             if (!product) return;
         
             productMainImage.src = product.imageUrls[0];
@@ -1127,13 +986,16 @@
         showAdminLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             adminLoginCard.classList.remove('hidden');
-            adminLoginError.textContent = '';
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-login-error').textContent = '';
         });
 
         showDealerLoginBtn.addEventListener('click', () => {
             loginOptionsContainer.classList.add('hidden');
             dealerLoginCard.classList.remove('hidden');
-            dealersLoginError.textContent = '';
+            document.getElementById('dealers-email').value = '';
+            document.getElementById('dealers-password').value = '';
+            document.getElementById('dealers-login-error').textContent = '';
         });
 
         showSignupFormBtn.addEventListener('click', (e) => {
@@ -1207,20 +1069,21 @@
         
         adminLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const password = adminPasswordInput.value;
+            const password = document.getElementById('admin-password').value;
+            const adminLoginError = document.getElementById('admin-login-error');
             adminLoginError.classList.add('hidden');
             if (password === ADMIN_PASSWORD) {
-                const adminEmail = 'admin@yourcompany.com';
-                const adminPass = 'admin_password_placeholder'; // Placeholder for security
                 try {
+                    const adminEmail = 'admin@yourcompany.com';
+                    const adminPass = 'admin_password_placeholder'; // Placeholder for security
                     const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
-                    await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' });
+                    await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' }, { merge: true });
                     loginModal.classList.add('hidden');
                     showMessageBox('Admin logged in successfully!');
                 } catch (error) {
                     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                         try {
-                           const userCredential = await createUserWithEmailAndPassword(auth, adminEmail, adminPass);
+                           const userCredential = await createUserWithEmailAndPassword(auth, 'admin@yourcompany.com', 'admin_password_placeholder');
                            await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' });
                            showMessageBox('Admin account created and logged in successfully!');
                            loginModal.classList.add('hidden');
@@ -1230,9 +1093,8 @@
                             console.error("Admin creation failed:", creationError);
                         }
                     } else {
-                        adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
+                        adminLoginError.textContent = error.message;
                         adminLoginError.classList.remove('hidden');
-                        console.error(error);
                     }
                 }
             } else {
@@ -1248,9 +1110,9 @@
         
         dealersLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = dealersLoginForm['dealers-email'].value;
-            const password = dealersLoginForm['dealers-password'].value;
-            dealersLoginError.classList.add('hidden');
+            const email = document.getElementById('dealers-email').value;
+            const password = document.getElementById('dealers-password').value;
+            document.getElementById('dealers-login-error').classList.add('hidden');
             
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -1260,12 +1122,12 @@
                     showMessageBox('Dealer logged in successfully!');
                 } else {
                     await signOut(auth);
-                    dealersLoginError.textContent = "Invalid email or password.";
-                    dealersLoginError.classList.remove('hidden');
+                    document.getElementById('dealers-login-error').textContent = "Invalid email or password.";
+                    document.getElementById('dealers-login-error').classList.remove('hidden');
                 }
             } catch (error) {
-                dealersLoginError.textContent = error.message;
-                dealersLoginError.classList.remove('hidden');
+                document.getElementById('dealers-login-error').textContent = error.message;
+                document.getElementById('dealers-login-error').classList.remove('hidden');
             }
         });
         
@@ -1276,25 +1138,25 @@
 
         createDealerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            createDealerError.classList.add('hidden');
-            const email = createDealerForm['dealer-email'].value;
-            const password = createDealerForm['dealer-password'].value;
+            document.getElementById('dealer-creation-error').classList.add('hidden');
+            const email = document.getElementById('dealer-email').value;
+            const password = document.getElementById('dealer-password').value;
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'dealer' });
-                createDealerForm.reset();
+                document.getElementById('create-dealer-form').reset();
                 showMessageBox(`Dealer account created successfully for ${email}.`);
             } catch (error) {
-                createDealerError.textContent = error.message;
-                createDealerError.classList.remove('hidden');
+                document.getElementById('dealer-creation-error').textContent = error.message;
+                document.getElementById('dealer-creation-error').classList.remove('hidden');
             }
         });
 
         consumerSignupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = consumerSignupForm['signup-email'].value;
-            const password = consumerSignupForm['signup-password'].value;
-            consumerSignupErrorMsg.classList.add('hidden');
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            document.getElementById('consumer-signup-error').classList.add('hidden');
 
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -1302,16 +1164,16 @@
                 showMessageBox('Account created successfully! You are now logged in.');
                 loginModal.classList.add('hidden');
             } catch (error) {
-                consumerSignupErrorMsg.textContent = error.message;
-                consumerSignupErrorMsg.classList.remove('hidden');
+                document.getElementById('consumer-signup-error').textContent = error.message;
+                document.getElementById('consumer-signup-error').classList.remove('hidden');
             }
         });
 
         consumerLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = consumerLoginForm['login-email'].value;
-            const password = consumerLoginForm['login-password'].value;
-            consumerLoginErrorMsg.classList.add('hidden');
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            document.getElementById('consumer-login-error').classList.add('hidden');
 
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -1321,12 +1183,12 @@
                     loginModal.classList.add('hidden');
                 } else {
                     await signOut(auth);
-                    consumerLoginErrorMsg.textContent = "Invalid email or password.";
-                    consumerLoginErrorMsg.classList.remove('hidden');
+                    document.getElementById('consumer-login-error').textContent = "Invalid email or password.";
+                    document.getElementById('consumer-login-error').classList.remove('hidden');
                 }
             } catch (error) {
-                consumerLoginErrorMsg.textContent = error.message;
-                consumerLoginErrorMsg.classList.remove('hidden');
+                document.getElementById('consumer-login-error').textContent = error.message;
+                document.getElementById('consumer-login-error').classList.remove('hidden');
             }
         });
         
@@ -1335,7 +1197,7 @@
         otpLoginCard.querySelector('#send-otp-btn').addEventListener('click', async (e) => {
             e.preventDefault();
             otpErrorMsg.classList.add('hidden');
-            const phoneNumber = phoneNumberInput.value;
+            const phoneNumber = document.getElementById('phone-number').value;
             if (!phoneNumber) {
                 otpErrorMsg.textContent = 'Please enter a valid phone number.';
                 otpErrorMsg.classList.remove('hidden');
@@ -1351,8 +1213,8 @@
                 });
                 const appVerifier = window.recaptchaVerifier;
                 confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-                phoneInputContainer.classList.add('hidden');
-                otpInputContainer.classList.remove('hidden');
+                document.getElementById('phone-input-container').classList.add('hidden');
+                document.getElementById('otp-input-container').classList.remove('hidden');
                 showMessageBox('OTP has been sent to your phone.');
             } catch (error) {
                 console.error("Error sending OTP:", error);
@@ -1364,7 +1226,7 @@
         otpLoginCard.querySelector('#verify-otp-btn').addEventListener('click', async (e) => {
             e.preventDefault();
             otpErrorMsg.classList.add('hidden');
-            const otpCode = otpCodeInput.value;
+            const otpCode = document.getElementById('otp-code').value;
             if (!otpCode) {
                 otpErrorMsg.textContent = 'Please enter the verification code.';
                 otpErrorMsg.classList.remove('hidden');
@@ -1396,20 +1258,20 @@
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const newProduct = {
-                name: addProductForm['new-product-name'].value,
-                price: parseFloat(addProductForm['new-product-price'].value),
-                category: addProductForm['new-product-category'].value,
+                name: document.getElementById('new-product-name').value,
+                price: parseFloat(document.getElementById('new-product-price').value),
+                category: document.getElementById('new-product-category').value,
                 imageUrls: [
-                    addProductForm['new-product-image-1'].value,
-                    addProductForm['new-product-image-2'].value,
-                    addProductForm['new-product-image-3'].value
+                    document.getElementById('new-product-image-1').value,
+                    document.getElementById('new-product-image-2').value,
+                    document.getElementById('new-product-image-3').value
                 ].filter(url => url),
-                description: addProductForm['new-product-description'].value
+                description: document.getElementById('new-product-description').value
             };
             
             try {
                 await addDoc(collection(db, 'products'), newProduct);
-                addProductForm.reset();
+                document.getElementById('add-product-form').reset();
                 showMessageBox('Product added successfully!');
             } catch (error) {
                 console.error("Error adding product: ", error);
@@ -1556,7 +1418,7 @@
 
         // Function to render the appliance list
         const renderApplianceList = () => {
-            applianceListDiv.innerHTML = appliances.map(appliance => {
+            document.getElementById('appliance-list').innerHTML = appliances.map(appliance => {
                 const idSlug = appliance.name.toLowerCase().replace(/[\s\(\)]/g, '-').replace(/[-]{2,}/g, '-');
                 return `
                 <div class="flex items-center space-x-4">
@@ -1574,7 +1436,7 @@
         };
 
         // Event listener for checkbox changes to enable/disable quantity input
-        applianceListDiv.addEventListener('change', (e) => {
+        document.getElementById('appliance-list').addEventListener('change', (e) => {
             if (e.target.type === 'checkbox' && e.target.name === 'appliance') {
                 const idSlug = e.target.dataset.applianceName.toLowerCase().replace(/[\s\(\)]/g, '-').replace(/[-]{2,}/g, '-');
                 const quantityInput = document.getElementById(`quantity-${idSlug}`);
@@ -1605,15 +1467,14 @@
             });
 
             if (totalLoadWatts === 0) {
-                calculatorResult.innerHTML = `<p class="text-red-500">Please select at least one appliance to calculate the load.</p>`;
+                document.getElementById('calculator-result').innerHTML = `<p class="text-red-500">Please select at least one appliance to calculate the load.</p>`;
                 return;
             }
 
-            // Using a conservative factor of 1.2 to account for peak demand
             const recommendedLoadWatts = totalLoadWatts * 1.2;
             const recommendedLoadKW = Math.ceil(recommendedLoadWatts / 1000);
 
-            calculatorResult.innerHTML = `
+            document.getElementById('calculator-result').innerHTML = `
                 <div class="space-y-4 text-left">
                     <h3 class="text-xl font-bold text-gray-800">Your Calculated Solar Load:</h3>
                     <p>Total Power Load: <strong>${totalLoadWatts} Watts</strong></p>
@@ -1623,13 +1484,6 @@
                     </p>
                 </div>
             `;
-        });
-
-        // Initial rendering on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            renderApplianceList(); // Render the appliance list on page load
-            updateCartCount();
-            document.querySelector('#filter-buttons .filter-button[data-filter="all"]').classList.add('active');
         });
     </script>
 </body>
