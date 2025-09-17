@@ -503,6 +503,7 @@
             setupRealtimeListeners();
         }).catch((error) => {
             console.error("Anonymous sign-in failed:", error);
+            showMessageBox('Failed to connect to the database. Please make sure Anonymous Authentication is enabled in your Firebase project.');
         });
 
         function setupRealtimeListeners() {
