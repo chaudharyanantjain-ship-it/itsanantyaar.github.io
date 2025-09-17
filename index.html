@@ -681,26 +681,43 @@
 
         function updateNavLinks(userRole) {
             // Hide all user-specific links by default
-            productsLink.classList.remove('hidden');
-            calculatorLink.classList.remove('hidden');
-            contactLink.classList.remove('hidden');
-            aboutLink.classList.remove('hidden');
+            productsLink.classList.add('hidden');
+            calculatorLink.classList.add('hidden');
+            contactLink.classList.add('hidden');
+            aboutLink.classList.add('hidden');
             cartLink.classList.add('hidden');
             adminLink.classList.add('hidden');
             dealersLink.classList.add('hidden');
             logoutBtn.classList.add('hidden');
-            loginBtn.classList.remove('hidden');
+            loginBtn.classList.add('hidden');
             
-            if (userRole === 'admin') {
-                loginBtn.classList.add('hidden');
+            // Show links based on user role or public access
+            if (!userRole) {
+                // Public user
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
+                loginBtn.classList.remove('hidden');
+            } else if (userRole === 'admin') {
                 adminLink.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
             } else if (userRole === 'dealer') {
-                loginBtn.classList.add('hidden');
                 dealersLink.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
             } else if (userRole === 'consumer') {
-                loginBtn.classList.add('hidden');
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
                 cartLink.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
             }
@@ -709,21 +726,17 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                try {
-                    const userDoc = await getDoc(doc(db, 'users', userId));
-                    let userRole = 'consumer'; // Default to consumer
-                    if (userDoc.exists()) {
-                        userRole = userDoc.data().role;
-                    } else {
-                        await setDoc(doc(db, 'users', userId), { role: 'consumer' });
-                    }
-                    updateNavLinks(userRole);
-                    setupRealtimeListeners();
-                } catch (error) {
-                    console.error("Error fetching user role:", error);
-                    showMessageBox("Error getting user information. Please try again.");
-                    signOut(auth);
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                let userRole = userDoc.exists() ? userDoc.data().role : 'consumer';
+                updateNavLinks(userRole);
+                if (userRole === 'admin') {
+                    showSection('admin-section');
+                } else if (userRole === 'dealer') {
+                    showSection('dealers-section');
+                } else {
+                    showSection('product-gallery-section');
                 }
+                setupRealtimeListeners();
             } else {
                 userId = null;
                 updateNavLinks(null);
@@ -1198,7 +1211,12 @@
             adminLoginError.classList.add('hidden');
             if (password === ADMIN_PASSWORD) {
                 try {
-                    await setDoc(doc(db, 'users', 'admin'), { role: 'admin' });
+                    // Check if an admin user already exists, or create one if not
+                    const adminDocRef = doc(db, 'users', 'admin');
+                    const adminDoc = await getDoc(adminDocRef);
+                    if (!adminDoc.exists()) {
+                        await setDoc(adminDocRef, { role: 'admin' });
+                    }
                     localStorage.setItem('isAdminLoggedIn', 'true');
                     loginModal.classList.add('hidden');
                     showSection('admin-section');
@@ -1215,7 +1233,6 @@
 
         adminLogoutBtn.addEventListener('click', async () => {
             localStorage.removeItem('isAdminLoggedIn');
-            await signOut(auth);
             showSection('products-link');
         });
         
