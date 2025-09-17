@@ -269,7 +269,7 @@
                             <input type="text" id="contact-name" class="form-input" required>
                         </div>
                         <div>
-                            <label for="contact-email" class="block text-gray-700 font-medium mb-2">Your Email</label>
+                            <label for="contact-email" class="block text-gray-700 font-medium mb-2">Email</label>
                             <input type="email" id="contact-email" class="form-input" required>
                         </div>
                         <div>
@@ -297,7 +297,7 @@
             </section>
         </div>
 
-        <!-- Admin and Dealer Login/Dashboard Sections -->
+        <!-- Admin and Dealer Dashboard Sections -->
         <section id="admin-section" class="hidden mb-12">
             <h2 class="section-title">Admin Dashboard</h2>
             <div id="admin-content" class="hidden">
@@ -463,6 +463,7 @@
                             <label for="login-password" class="block text-gray-700 font-medium mb-2">Password</label>
                             <input type="password" id="login-password" class="form-input" required>
                         </div>
+                        <p id="consumer-login-error" class="text-red-500 text-sm mt-2 hidden text-center"></p>
                         <button type="submit" class="btn btn-primary w-full mt-4">Login</button>
                     </form>
                     <p class="text-center text-gray-600 my-4">Don't have an account? <a href="#" id="show-signup-form" class="text-blue-600 hover:underline">Sign up here.</a></p>
@@ -481,6 +482,7 @@
                             <label for="signup-password" class="block text-gray-700 font-medium mb-2">Password</label>
                             <input type="password" id="signup-password" class="form-input" required>
                         </div>
+                        <p id="consumer-signup-error" class="text-red-500 text-sm mt-2 hidden text-center"></p>
                         <button type="submit" class="btn btn-primary w-full mt-4">Sign Up</button>
                     </form>
                     <p class="text-center text-gray-600 my-4">Already have an account? <a href="#" id="show-login-form" class="text-blue-600 hover:underline">Login here.</a></p>
@@ -503,6 +505,7 @@
                             <button type="submit" id="verify-otp-btn" class="btn btn-primary w-full mt-4">Verify OTP</button>
                         </div>
                     </form>
+                    <p id="otp-error-message" class="text-red-500 text-sm mt-2 hidden text-center"></p>
                 </div>
 
                 <!-- Admin Login Card -->
@@ -521,6 +524,7 @@
                 <!-- Dealer Login Card -->
                 <div id="dealer-login-card" class="form-container hidden">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dealer Login</h3>
+                    <p class="text-center text-gray-600 mb-6">Login with your assigned email and password.</p>
                     <form id="dealers-login-form" class="space-y-4">
                         <div>
                             <label for="dealers-email" class="block text-gray-700 font-medium mb-2">Email Address</label>
@@ -531,10 +535,9 @@
                             <input type="password" id="dealers-password" class="form-input" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-full mt-4">Login to Dealers</button>
-                        <p id="dealers-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
+                        <p id="dealers-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Invalid email or password.</p>
                     </form>
                 </div>
-                <div id="auth-error-message" class="text-red-500 text-sm mt-4 text-center"></div>
             </div>
         </div>
 
@@ -624,16 +627,13 @@
         const showLoginFormBtn = document.getElementById('show-login-form');
         const consumerLoginForm = document.getElementById('consumer-login-form');
         const consumerSignupForm = document.getElementById('consumer-signup-form');
-        const authErrorMessage = document.getElementById('auth-error-message');
-        const loginErrorMsg = document.getElementById('login-error-message');
-        const signupErrorMsg = document.getElementById('signup-error-message');
-        const otpErrorMsg = document.getElementById('otp-error-message');
-
+        
         const otpForm = document.getElementById('otp-form');
         const phoneNumberInput = document.getElementById('phone-number');
         const phoneInputContainer = document.getElementById('phone-input-container');
         const otpInputContainer = document.getElementById('otp-input-container');
         const otpCodeInput = document.getElementById('otp-code');
+        const otpErrorMsg = document.getElementById('otp-error-message');
 
         const solarCalculatorSection = document.getElementById('solar-calculator-section');
         const checkoutSummary = document.getElementById('checkout-summary');
@@ -1190,10 +1190,17 @@
             e.preventDefault();
             const password = adminPasswordInput.value;
             if (password === ADMIN_PASSWORD) {
-                // For admin, we use a fixed password but still track login state
-                localStorage.setItem('isAdminLoggedIn', 'true');
-                loginModal.classList.add('hidden');
-                showSection('admin-section');
+                try {
+                    await setDoc(doc(db, 'users', 'admin'), { role: 'admin' });
+                    // A simple email/pass sign-in for admin
+                    const adminCredential = await signInWithEmailAndPassword(auth, 'admin@yourcompany.com', 'admin_password_placeholder');
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    loginModal.classList.add('hidden');
+                    showSection('admin-section');
+                } catch (error) {
+                     adminLoginError.textContent = 'Invalid password or error logging in.';
+                     adminLoginError.classList.remove('hidden');
+                }
             } else {
                 adminLoginError.classList.remove('hidden');
             }
@@ -1201,6 +1208,7 @@
 
         adminLogoutBtn.addEventListener('click', async () => {
             localStorage.removeItem('isAdminLoggedIn');
+            await signOut(auth);
             showSection('products-link');
         });
         
@@ -1208,13 +1216,13 @@
             e.preventDefault();
             const email = dealersLoginForm['dealers-email'].value;
             const password = dealersLoginForm['dealers-password'].value;
+            dealersLoginError.classList.add('hidden');
             
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
                 if (userDoc.exists() && userDoc.data().role === 'dealer') {
                     localStorage.setItem('isDealerLoggedIn', 'true');
-                    dealersLoginError.classList.add('hidden');
                     loginModal.classList.add('hidden');
                     showSection('dealers-section');
                 } else {
@@ -1228,8 +1236,8 @@
             }
         });
         
-        dealersLogoutBtn.addEventListener('click', () => {
-            signOut(auth);
+        dealersLogoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
             localStorage.removeItem('isDealerLoggedIn');
             showSection('products-link');
         });
@@ -1254,13 +1262,16 @@
             e.preventDefault();
             const email = consumerSignupForm['signup-email'].value;
             const password = consumerSignupForm['signup-password'].value;
+            signupErrorMsg.classList.add('hidden');
 
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'consumer' });
                 showMessageBox('Account created successfully! You are now logged in.');
                 loginModal.classList.add('hidden');
             } catch (error) {
-                authErrorMessage.textContent = error.message;
+                signupErrorMsg.textContent = error.message;
+                signupErrorMsg.classList.remove('hidden');
             }
         });
 
@@ -1268,13 +1279,15 @@
             e.preventDefault();
             const email = consumerLoginForm['login-email'].value;
             const password = consumerLoginForm['login-password'].value;
+            loginErrorMsg.classList.add('hidden');
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 showMessageBox('Logged in successfully!');
                 loginModal.classList.add('hidden');
             } catch (error) {
-                authErrorMessage.textContent = error.message;
+                loginErrorMsg.textContent = error.message;
+                loginErrorMsg.classList.remove('hidden');
             }
         });
         
@@ -1282,10 +1295,11 @@
         let recaptchaVerifier;
         otpLoginCard.querySelector('#send-otp-btn').addEventListener('click', async (e) => {
             e.preventDefault();
-            authErrorMessage.textContent = '';
+            otpErrorMsg.classList.add('hidden');
             const phoneNumber = phoneNumberInput.value;
             if (!phoneNumber) {
-                authErrorMessage.textContent = 'Please enter a valid phone number.';
+                otpErrorMsg.textContent = 'Please enter a valid phone number.';
+                otpErrorMsg.classList.remove('hidden');
                 return;
             }
 
@@ -1303,16 +1317,18 @@
                 showMessageBox('OTP has been sent to your phone.');
             } catch (error) {
                 console.error("Error sending OTP:", error);
-                authErrorMessage.textContent = error.message;
+                otpErrorMsg.textContent = error.message;
+                otpErrorMsg.classList.remove('hidden');
             }
         });
 
         otpLoginCard.querySelector('#verify-otp-btn').addEventListener('click', async (e) => {
             e.preventDefault();
-            authErrorMessage.textContent = '';
+            otpErrorMsg.classList.add('hidden');
             const otpCode = otpCodeInput.value;
             if (!otpCode) {
-                authErrorMessage.textContent = 'Please enter the verification code.';
+                otpErrorMsg.textContent = 'Please enter the verification code.';
+                otpErrorMsg.classList.remove('hidden');
                 return;
             }
             try {
@@ -1321,7 +1337,8 @@
                 loginModal.classList.add('hidden');
             } catch (error) {
                 console.error("Error verifying OTP:", error);
-                authErrorMessage.textContent = error.message;
+                otpErrorMsg.textContent = error.message;
+                otpErrorMsg.classList.remove('hidden');
             }
         });
 
