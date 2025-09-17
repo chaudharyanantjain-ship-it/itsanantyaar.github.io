@@ -103,7 +103,7 @@
         .filter-button.active {
             background-color: #10b981; /* Green for active filter */
             color: #ffffff;
-            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 4px 6px -1-px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
         }
         .form-container {
             background-color: #ffffff;
@@ -170,127 +170,134 @@
                 <a href="#" class="nav-item" id="calculator-link">Calculator</a>
                 <a href="#" class="nav-item" id="contact-link">Contact Us</a>
                 <a href="#" class="nav-item" id="about-link">About Us</a>
-                <a href="#" class="nav-item" id="admin-link">Admin</a>
-                <a href="#" class="nav-item relative" id="cart-link">
+                <button id="login-btn" class="nav-item">Login</button>
+                <a href="#" class="nav-item relative hidden" id="cart-link">
                     Cart (<span id="cart-count">0</span>)
                 </a>
+                <a href="#" class="nav-item hidden" id="admin-link">Admin</a>
+                <a href="#" class="nav-item hidden" id="dealers-link">Dealers</a>
+                <button id="logout-btn" class="nav-item hidden">Logout</button>
             </nav>
         </header>
 
-        <section id="product-gallery-section">
-            <h2 class="section-title">Our Products</h2>
-            <div class="flex space-x-4 mb-8 justify-center" id="filter-buttons">
-                <button class="btn btn-secondary filter-button active" data-filter="all">All</button>
-                <button class="btn btn-secondary filter-button" data-filter="solar">Solar</button>
-                <button class="btn btn-secondary filter-button" data-filter="automotive">Automotive</button>
-            </div>
-            <div id="product-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            </div>
-        </section>
+        <!-- Main Website Sections -->
+        <div id="main-content">
+            <section id="product-gallery-section">
+                <h2 class="section-title">Our Products</h2>
+                <div class="flex space-x-4 mb-8 justify-center" id="filter-buttons">
+                    <button class="btn btn-secondary filter-button active" data-filter="all">All</button>
+                    <button class="btn btn-secondary filter-button" data-filter="solar">Solar</button>
+                    <button class="btn btn-secondary filter-button" data-filter="automotive">Automotive</button>
+                </div>
+                <div id="product-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                </div>
+            </section>
 
-        <section id="product-details-section" class="hidden">
-            <button id="back-to-products-btn" class="btn btn-secondary mb-8">&larr; Back to Products</button>
-            <div class="bg-white p-8 rounded-lg shadow-md flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
-                <div class="md:w-1/2">
-                    <img id="product-main-image" src="" alt="" class="w-full h-auto rounded-lg mb-4">
-                    <div id="product-thumbnails" class="flex space-x-2 overflow-x-auto">
+            <section id="product-details-section" class="hidden">
+                <button id="back-to-products-btn" class="btn btn-secondary mb-8">&larr; Back to Products</button>
+                <div class="bg-white p-8 rounded-lg shadow-md flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
+                    <div class="md:w-1/2">
+                        <img id="product-main-image" src="" alt="" class="w-full h-auto rounded-lg mb-4">
+                        <div id="product-thumbnails" class="flex space-x-2 overflow-x-auto">
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 mt-8 md:mt-0">
+                        <h1 id="product-details-name" class="text-3xl font-bold text-gray-800"></h1>
+                        <p id="product-details-category" class="text-lg text-gray-600 mt-2"></p>
+                        <p id="product-details-price" class="text-4xl font-bold text-green-600 my-4"></p>
+                        <p id="product-details-description" class="text-gray-700 leading-relaxed"></p>
+                        <button id="add-to-cart-details-btn" class="btn btn-primary w-full mt-8">Add to Cart</button>
                     </div>
                 </div>
-                <div class="md:w-1/2 mt-8 md:mt-0">
-                    <h1 id="product-details-name" class="text-3xl font-bold text-gray-800"></h1>
-                    <p id="product-details-category" class="text-lg text-gray-600 mt-2"></p>
-                    <p id="product-details-price" class="text-4xl font-bold text-green-600 my-4"></p>
-                    <p id="product-details-description" class="text-gray-700 leading-relaxed"></p>
-                    <button id="add-to-cart-details-btn" class="btn btn-primary w-full mt-8">Add to Cart</button>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="checkout-section" class="hidden mb-12">
-            <h2 class="section-title">Checkout</h2>
-            <div class="form-container flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
-                <div class="md:w-1/2">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
-                    <div id="checkout-summary" class="space-y-4 text-base">
+            <section id="checkout-section" class="hidden mb-12">
+                <h2 class="section-title">Checkout</h2>
+                <div class="form-container flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
+                    <div class="md:w-1/2">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
+                        <div id="checkout-summary" class="space-y-4 text-base">
+                        </div>
+                        <div id="checkout-total" class="mt-6 text-right text-2xl font-bold text-gray-800 border-t pt-6">
+                            Total: ₹0
+                        </div>
                     </div>
-                    <div id="checkout-total" class="mt-6 text-right text-2xl font-bold text-gray-800 border-t pt-6">
-                        Total: ₹0
+                    <div class="md:w-1/2 mt-10 md:mt-0">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Customer Information</h3>
+                        <form id="checkout-form" class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                                <input type="text" id="name" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                                <input type="email" id="email" class="form-input" required>
+                            </div>
+                            <div>
+                                <label for="address" class="block text-gray-700 font-medium mb-2">Shipping Address</label>
+                                <input type="text" id="address" class="form-input" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full mt-6">Place Order</button>
+                        </form>
                     </div>
                 </div>
-                <div class="md:w-1/2 mt-10 md:mt-0">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Customer Information</h3>
-                    <form id="checkout-form" class="space-y-4">
+            </section>
+
+            <section id="solar-calculator-section" class="hidden mb-12">
+                <h2 class="section-title">Solar Power Load Calculator</h2>
+                <div class="form-container max-w-2xl mx-auto">
+                    <p class="text-gray-600 mb-6 text-lg text-center">Select the appliances you want to run on solar power to estimate your total load.</p>
+                    <form id="solar-calculator-form" class="space-y-4">
+                        <div id="appliance-list" class="space-y-4">
+                            <!-- Appliances will be dynamically generated here -->
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-6">Calculate Required Power</button>
+                    </form>
+                    <div id="calculator-result" class="mt-8 text-center text-lg font-semibold text-gray-800">
+                        <!-- Result will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact-section" class="hidden mb-12">
+                <h2 class="section-title">Contact Us</h2>
+                <div class="form-container max-w-2xl mx-auto">
+                    <p class="text-gray-600 mb-6 text-lg text-center">Have a question or need a quote? Fill out the form below and we'll get back to you as soon as possible.</p>
+                    <form id="contact-form" class="space-y-4">
                         <div>
-                            <label for="name" class="block text-gray-700 font-medium mb-2">Full Name</label>
-                            <input type="text" id="name" class="form-input" required>
+                            <label for="contact-name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                            <input type="text" id="contact-name" class="form-input" required>
                         </div>
                         <div>
-                            <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
-                            <input type="email" id="email" class="form-input" required>
+                            <label for="contact-email" class="block text-gray-700 font-medium mb-2">Your Email</label>
+                            <input type="email" id="contact-email" class="form-input" required>
                         </div>
                         <div>
-                            <label for="address" class="block text-gray-700 font-medium mb-2">Shipping Address</label>
-                            <input type="text" id="address" class="form-input" required>
+                            <label for="contact-message" class="block text-gray-700 font-medium mb-2">Your Message</label>
+                            <textarea id="contact-message" rows="5" class="form-textarea" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary w-full mt-6">Place Order</button>
+                        <button type="submit" class="btn btn-primary w-full mt-6">Send Message</button>
                     </form>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <section id="solar-calculator-section" class="hidden mb-12">
-            <h2 class="section-title">Solar Power Load Calculator</h2>
-            <div class="form-container max-w-2xl mx-auto">
-                <p class="text-gray-600 mb-6 text-lg text-center">Select the appliances you want to run on solar power to estimate your total load.</p>
-                <form id="solar-calculator-form" class="space-y-4">
-                    <div id="appliance-list" class="space-y-4">
-                        <!-- Appliances will be dynamically generated here -->
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full mt-6">Calculate Required Power</button>
-                </form>
-                <div id="calculator-result" class="mt-8 text-center text-lg font-semibold text-gray-800">
-                    <!-- Result will be displayed here -->
+            <section id="about-section" class="hidden mb-12">
+                <h2 class="section-title">About Us</h2>
+                <div class="form-container max-w-3xl mx-auto text-center">
+                    <p class="text-xl text-gray-800 mb-6 leading-relaxed">
+                        Welcome to Chaudhary Oil Agencies! We are dedicated to providing high-quality solar energy and automotive products to help you transition to a cleaner, more sustainable future and keep your vehicles running smoothly.
+                    </p>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Our mission is to make sustainable power accessible and affordable for everyone. We believe that by offering top-tier products and excellent service, we can empower our community to reduce its carbon footprint and ensure reliable performance.
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        From high-efficiency solar panels to reliable inverters, batteries, and a wide range of automotive essentials, our product selection is curated to meet the diverse needs of both residential, commercial, and vehicle owners.
+                    </p>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
-        <section id="contact-section" class="hidden mb-12">
-            <h2 class="section-title">Contact Us</h2>
-            <div class="form-container max-w-2xl mx-auto">
-                <p class="text-gray-600 mb-6 text-lg text-center">Have a question or need a quote? Fill out the form below and we'll get back to you as soon as possible.</p>
-                <form id="contact-form" class="space-y-4">
-                    <div>
-                        <label for="contact-name" class="block text-gray-700 font-medium mb-2">Your Name</label>
-                        <input type="text" id="contact-name" class="form-input" required>
-                    </div>
-                    <div>
-                        <label for="contact-email" class="block text-gray-700 font-medium mb-2">Your Email</label>
-                        <input type="email" id="contact-email" class="form-input" required>
-                    </div>
-                    <div>
-                        <label for="contact-message" class="block text-gray-700 font-medium mb-2">Your Message</label>
-                        <textarea id="contact-message" rows="5" class="form-textarea" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full mt-6">Send Message</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="about-section" class="hidden mb-12">
-            <h2 class="section-title">About Us</h2>
-            <div class="form-container max-w-3xl mx-auto text-center">
-                <p class="text-xl text-gray-800 mb-6 leading-relaxed">
-                    Welcome to Chaudhary Oil Agencies! We are dedicated to providing high-quality solar energy and automotive products to help you transition to a cleaner, more sustainable future and keep your vehicles running smoothly.
-                </p>
-                <p class="text-lg text-gray-600 mb-6 leading-relaxed">
-                    Our mission is to make sustainable power accessible and affordable for everyone. We believe that by offering top-tier products and excellent service, we can empower our community to reduce its carbon footprint and ensure reliable performance.
-                </p>
-                <p class="text-lg text-gray-600 leading-relaxed">
-                    From high-efficiency solar panels to reliable inverters, batteries, and a wide range of automotive essentials, our product selection is curated to meet the diverse needs of both residential, commercial, and vehicle owners.
-                </p>
-            </div>
-        </section>
-
+        <!-- Admin and Dealer Login/Dashboard Sections -->
         <section id="admin-section" class="hidden mb-12">
             <h2 class="section-title">Admin Dashboard</h2>
             <div id="admin-login-prompt" class="form-container max-w-md mx-auto">
@@ -376,6 +383,42 @@
             </div>
         </section>
 
+        <section id="dealers-section" class="hidden mb-12">
+            <h2 class="section-title">Dealers Dashboard</h2>
+            <div id="dealers-login-prompt" class="form-container max-w-md mx-auto">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dealer Login</h3>
+                <form id="dealers-login-form" class="space-y-4">
+                    <div>
+                        <label for="dealers-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                        <input type="password" id="dealers-password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-4">Login to Dealers</button>
+                    <p id="dealers-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
+                </form>
+            </div>
+            
+            <div id="dealers-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                    <!-- Consumer Orders Card for Dealers -->
+                    <div class="form-container">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Consumer Orders</h3>
+                        <div id="dealers-orders-list" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                        </div>
+                        <p id="dealers-no-orders-message" class="text-center text-gray-600 hidden">No orders submitted yet.</p>
+                    </div>
+
+                    <!-- Customer Complaints Card for Dealers -->
+                    <div class="form-container">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Customer Complaints</h3>
+                        <div id="dealers-complaints-list" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                        </div>
+                        <p id="dealers-no-complaints-message" class="text-center text-gray-600 hidden">No complaints submitted yet.</p>
+                    </div>
+                </div>
+                <button id="dealers-logout-btn" class="btn btn-secondary w-full max-w-xs mx-auto block mt-8">Logout</button>
+            </div>
+        </section>
+
         <div id="cart-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
             <div class="modal-content w-full max-w-lg p-8">
                 <div class="text-center">
@@ -393,11 +436,118 @@
             </div>
         </div>
 
+        <!-- Custom Login Modal -->
+        <div id="login-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+            <div class="modal-content w-full max-w-2xl p-8 space-y-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-3xl font-bold text-gray-900">Login</h3>
+                    <button id="close-login-modal" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div id="login-options-container" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button id="show-consumer-login-btn" class="btn btn-primary">Consumer Login</button>
+                        <button id="show-otp-login-btn" class="btn btn-primary">Login with OTP</button>
+                        <button id="show-admin-login-btn" class="btn btn-secondary">Admin Login</button>
+                        <button id="show-dealer-login-btn" class="btn btn-secondary">Dealer Login</button>
+                    </div>
+                </div>
+
+                <!-- Consumer Login/Signup Card -->
+                <div id="consumer-login-card" class="form-container hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Consumer Login</h3>
+                    <p class="text-center text-gray-600 mb-6">Login with your email or sign up for a new account.</p>
+                    <form id="consumer-login-form" class="space-y-4">
+                        <div>
+                            <label for="login-email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" id="login-email" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                            <input type="password" id="login-password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-4">Login</button>
+                    </form>
+                    <p class="text-center text-gray-600 my-4">Don't have an account? <a href="#" id="show-signup-form" class="text-blue-600 hover:underline">Sign up here.</a></p>
+                </div>
+
+                <!-- Consumer Signup Form -->
+                <div id="consumer-signup-card" class="form-container hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">New User Signup</h3>
+                    <p class="text-center text-gray-600 mb-6">Create a new account with your email and a strong password.</p>
+                    <form id="consumer-signup-form" class="space-y-4">
+                        <div>
+                            <label for="signup-email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" id="signup-email" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                            <input type="password" id="signup-password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-4">Sign Up</button>
+                    </form>
+                    <p class="text-center text-gray-600 my-4">Already have an account? <a href="#" id="show-login-form" class="text-blue-600 hover:underline">Login here.</a></p>
+                </div>
+
+                <!-- OTP Login Card -->
+                <div id="otp-login-card" class="form-container hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login with OTP</h3>
+                    <p class="text-center text-gray-600 mb-6">Enter your phone number to receive a one-time login code.</p>
+                    <form id="otp-form" class="space-y-4">
+                        <div id="phone-input-container">
+                            <label for="phone-number" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                            <input type="tel" id="phone-number" class="form-input" placeholder="+919876543210" required>
+                            <div id="recaptcha-container" class="mt-4"></div>
+                            <button type="submit" id="send-otp-btn" class="btn btn-primary w-full mt-4">Send OTP</button>
+                        </div>
+                        <div id="otp-input-container" class="hidden">
+                            <label for="otp-code" class="block text-gray-700 font-medium mb-2">Verification Code</label>
+                            <input type="text" id="otp-code" class="form-input" placeholder="Enter 6-digit code" required>
+                            <button type="submit" id="verify-otp-btn" class="btn btn-primary w-full mt-4">Verify OTP</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Admin Login Card -->
+                <div id="admin-login-card" class="form-container hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Owner Login</h3>
+                    <form id="admin-login-form" class="space-y-4">
+                        <div>
+                            <label for="admin-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                            <input type="password" id="admin-password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-4">Login to Admin</button>
+                        <p id="admin-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
+                    </form>
+                </div>
+                
+                <!-- Dealer Login Card -->
+                <div id="dealer-login-card" class="form-container hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dealer Login</h3>
+                    <form id="dealers-login-form" class="space-y-4">
+                        <div>
+                            <label for="dealers-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                            <input type="password" id="dealers-password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-4">Login to Dealers</button>
+                        <p id="dealers-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
+                    </form>
+                </div>
+                <div id="auth-error-message" class="text-red-500 text-sm mt-4 text-center"></div>
+            </div>
+        </div>
+
         <!-- Custom Message Box to replace alerts -->
-        <div id="message-box" class="hidden message-box-overlay">
-            <div class="message-box max-w-sm mx-auto p-8">
-                <p id="message-text" class="text-gray-800 text-lg font-medium mb-6"></p>
-                <button id="message-box-ok-btn" class="btn btn-primary">OK</button>
+        <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
+            <div class="modal-content w-full max-w-sm p-8">
+                <div class="text-center">
+                    <p id="message-text" class="text-gray-800 text-lg font-medium mb-6"></p>
+                    <button id="message-box-ok-btn" class="btn btn-primary w-full">OK</button>
+                </div>
             </div>
         </div>
     </div>
@@ -408,7 +558,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -424,13 +574,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        let userId = 'anonymous'; // Default ID
+        let userId = null;
+        let confirmationResult = null; // To store the confirmation result for OTP verification
         
-        // --- Static Website Data (Moved to Firebase in the script) ---
-        // These are now just initial values. The app will use the DB.
         let products = [];
         
         const ADMIN_PASSWORD = 'password123';
+        const DEALER_PASSWORD = 'dealer123';
         let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
         
         const cartCountElement = document.getElementById('cart-count');
@@ -450,16 +600,42 @@
         const cartTotalElement = document.getElementById('cart-total');
         const cartLink = document.getElementById('cart-link');
         const modalCheckoutBtn = document.getElementById('checkout-btn');
-        const productGallerySection = document.getElementById('product-gallery-section');
-        const checkoutSection = document.getElementById('checkout-section');
-        const contactSection = document.getElementById('contact-section');
-        const aboutSection = document.getElementById('about-section');
-        const adminSection = document.getElementById('admin-section');
         const productsLink = document.getElementById('products-link');
         const calculatorLink = document.getElementById('calculator-link');
         const contactLink = document.getElementById('contact-link');
         const aboutLink = document.getElementById('about-link');
         const adminLink = document.getElementById('admin-link');
+        const dealersLink = document.getElementById('dealers-link');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        const mainContent = document.getElementById('main-content');
+        
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModalBtn = document.getElementById('close-login-modal');
+        const loginOptionsContainer = document.getElementById('login-options-container');
+        const consumerLoginCard = document.getElementById('consumer-login-card');
+        const consumerSignupCard = document.getElementById('consumer-signup-card');
+        const otpLoginCard = document.getElementById('otp-login-card');
+        const adminLoginCard = document.getElementById('admin-login-card');
+        const dealerLoginCard = document.getElementById('dealer-login-card');
+        
+        const showConsumerLoginBtn = document.getElementById('show-consumer-login-btn');
+        const showOtpLoginBtn = document.getElementById('show-otp-login-btn');
+        const showAdminLoginBtn = document.getElementById('show-admin-login-btn');
+        const showDealerLoginBtn = document.getElementById('show-dealer-login-btn');
+        const showSignupFormBtn = document.getElementById('show-signup-form');
+        const showLoginFormBtn = document.getElementById('show-login-form');
+        const consumerLoginForm = document.getElementById('consumer-login-form');
+        const consumerSignupForm = document.getElementById('consumer-signup-form');
+        const authErrorMessage = document.getElementById('auth-error-message');
+
+        const otpForm = document.getElementById('otp-form');
+        const phoneNumberInput = document.getElementById('phone-number');
+        const phoneInputContainer = document.getElementById('phone-input-container');
+        const otpInputContainer = document.getElementById('otp-input-container');
+        const otpCodeInput = document.getElementById('otp-code');
+
         const solarCalculatorSection = document.getElementById('solar-calculator-section');
         const checkoutSummary = document.getElementById('checkout-summary');
         const checkoutTotal = document.getElementById('checkout-total');
@@ -475,12 +651,24 @@
         const adminComplaintsList = document.getElementById('admin-complaints-list');
         const noOrdersMessage = document.getElementById('no-orders-message');
         const noComplaintsMessage = document.getElementById('no-complaints-message');
+        const adminSection = document.getElementById('admin-section');
         const adminLoginPrompt = document.getElementById('admin-login-prompt');
         const adminLoginForm = document.getElementById('admin-login-form');
         const adminPasswordInput = document.getElementById('admin-password');
         const adminLoginError = document.getElementById('admin-login-error');
         const adminContent = document.getElementById('admin-content');
         const adminLogoutBtn = document.getElementById('admin-logout-btn');
+        const dealersSection = document.getElementById('dealers-section');
+        const dealersLoginPrompt = document.getElementById('dealers-login-prompt');
+        const dealersLoginForm = document.getElementById('dealers-login-form');
+        const dealersPasswordInput = document.getElementById('dealers-password');
+        const dealersLoginError = document.getElementById('dealers-login-error');
+        const dealersContent = document.getElementById('dealers-content');
+        const dealersOrdersList = document.getElementById('dealers-orders-list');
+        const dealersComplaintsList = document.getElementById('dealers-complaints-list');
+        const dealersNoOrdersMessage = document.getElementById('dealers-no-orders-message');
+        const dealersNoComplaintsMessage = document.getElementById('dealers-no-complaints-message');
+        const dealersLogoutBtn = document.getElementById('dealers-logout-btn');
         const messageBox = document.getElementById('message-box');
         const messageText = document.getElementById('message-text');
         const messageBoxOkBtn = document.getElementById('message-box-ok-btn');
@@ -496,14 +684,41 @@
         });
         // --- End custom message box function ---
 
-        // Firebase Authentication and Data Listeners
-        signInAnonymously(auth).then((result) => {
-            userId = result.user.uid;
-            console.log("Signed in anonymously. User ID:", userId);
-            setupRealtimeListeners();
-        }).catch((error) => {
-            console.error("Anonymous sign-in failed:", error);
-            showMessageBox('Failed to connect to the database. Please make sure Anonymous Authentication is enabled in your Firebase project.');
+        function updateNavLinks(isAuthenticated) {
+            if (isAuthenticated) {
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
+                cartLink.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+                loginBtn.classList.add('hidden');
+                adminLink.classList.add('hidden');
+                dealersLink.classList.add('hidden');
+            } else {
+                productsLink.classList.remove('hidden');
+                calculatorLink.classList.remove('hidden');
+                contactLink.classList.remove('hidden');
+                aboutLink.classList.remove('hidden');
+                cartLink.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
+                adminLink.classList.add('hidden');
+                dealersLink.classList.add('hidden');
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userId = user.uid;
+                updateNavLinks(true);
+                setupRealtimeListeners();
+            } else {
+                userId = null;
+                updateNavLinks(false);
+                // Re-render the public view
+                showSection('product-gallery-section');
+            }
         });
 
         function setupRealtimeListeners() {
@@ -521,12 +736,18 @@
                 if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                     renderAdminOrders(orders);
                 }
+                if (localStorage.getItem('isDealerLoggedIn') === 'true') {
+                    renderDealersOrders(orders);
+                }
             });
             // Complaints Listener
             onSnapshot(collection(db, 'complaints'), (snapshot) => {
                 const complaints = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                     renderAdminComplaints(complaints);
+                }
+                if (localStorage.getItem('isDealerLoggedIn') === 'true') {
+                    renderDealersComplaints(complaints);
                 }
             });
         }
@@ -549,6 +770,16 @@
                     adminContent.classList.add('hidden');
                     adminLoginError.classList.add('hidden');
                     adminLoginForm.reset();
+                }
+            } else if (sectionId === 'dealers-section') {
+                 if (localStorage.getItem('isDealerLoggedIn') === 'true') {
+                    dealersLoginPrompt.classList.add('hidden');
+                    dealersContent.classList.remove('hidden');
+                } else {
+                    dealersLoginPrompt.classList.remove('hidden');
+                    dealersContent.classList.add('hidden');
+                    dealersLoginError.classList.add('hidden');
+                    dealersLoginForm.reset();
                 }
             }
         };
@@ -680,6 +911,57 @@
                         <p class="text-sm text-gray-700"><strong>Message:</strong> ${complaint.message}</p>
                     `;
                     adminComplaintsList.appendChild(complaintItem);
+                });
+            }
+        };
+        
+        const renderDealersOrders = (orders) => {
+            dealersOrdersList.innerHTML = '';
+            if (orders.length === 0) {
+                dealersNoOrdersMessage.classList.remove('hidden');
+            } else {
+                dealersNoOrdersMessage.classList.add('hidden');
+                orders.forEach(order => {
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm space-y-2';
+                    const orderItemsHtml = order.items.map(item => `
+                        <li class="text-sm text-gray-600">${item.name} x ${item.quantity} (₹${(item.price * item.quantity).toLocaleString('en-IN')})</li>
+                    `).join('');
+
+                    orderItem.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-semibold text-gray-800">Order ID: ${order.id}</h4>
+                        </div>
+                        <p class="text-sm text-gray-700"><strong>Customer:</strong> ${order.customerName}</p>
+                        <p class="text-sm text-gray-700"><strong>Email:</strong> ${order.email}</p>
+                        <p class="text-sm text-gray-700"><strong>Address:</strong> ${order.address}</p>
+                        <p class="font-semibold text-gray-800">Total: ₹${order.total.toLocaleString('en-IN')}</p>
+                        <ul class="list-disc list-inside mt-2 text-sm">
+                            ${orderItemsHtml}
+                        </ul>
+                    `;
+                    dealersOrdersList.appendChild(orderItem);
+                });
+            }
+        };
+
+        const renderDealersComplaints = (complaints) => {
+            dealersComplaintsList.innerHTML = '';
+            if (complaints.length === 0) {
+                dealersNoComplaintsMessage.classList.remove('hidden');
+            } else {
+                dealersNoComplaintsMessage.classList.add('hidden');
+                complaints.forEach(complaint => {
+                    const complaintItem = document.createElement('div');
+                    complaintItem.className = 'bg-gray-50 p-4 rounded-lg shadow-sm space-y-2';
+                    complaintItem.innerHTML = `
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-semibold text-gray-800">Complaint from ${complaint.name}</h4>
+                        </div>
+                        <p class="text-sm text-gray-700"><strong>Email:</strong> ${complaint.email}</p>
+                        <p class="text-sm text-gray-700"><strong>Message:</strong> ${complaint.message}</p>
+                    `;
+                    dealersComplaintsList.appendChild(complaintItem);
                 });
             }
         };
@@ -819,7 +1101,59 @@
             e.preventDefault();
             showSection('admin-section');
         });
+
+        dealersLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection('dealers-section');
+        });
+
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+        });
+
+        closeLoginModalBtn.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            loginOptionsContainer.classList.remove('hidden');
+            consumerLoginCard.classList.add('hidden');
+            consumerSignupCard.classList.add('hidden');
+            otpLoginCard.classList.add('hidden');
+            adminLoginCard.classList.add('hidden');
+            dealerLoginCard.classList.add('hidden');
+            authErrorMessage.textContent = '';
+        });
         
+        showConsumerLoginBtn.addEventListener('click', () => {
+            loginOptionsContainer.classList.add('hidden');
+            consumerLoginCard.classList.remove('hidden');
+        });
+
+        showOtpLoginBtn.addEventListener('click', () => {
+            loginOptionsContainer.classList.add('hidden');
+            otpLoginCard.classList.remove('hidden');
+        });
+
+        showAdminLoginBtn.addEventListener('click', () => {
+            loginOptionsContainer.classList.add('hidden');
+            adminLoginCard.classList.remove('hidden');
+        });
+
+        showDealerLoginBtn.addEventListener('click', () => {
+            loginOptionsContainer.classList.add('hidden');
+            dealerLoginCard.classList.remove('hidden');
+        });
+
+        showSignupFormBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            consumerLoginCard.classList.add('hidden');
+            consumerSignupCard.classList.remove('hidden');
+        });
+
+        showLoginFormBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            consumerSignupCard.classList.add('hidden');
+            consumerLoginCard.classList.remove('hidden');
+        });
+
         productGallery.addEventListener('click', (e) => {
             const productLink = e.target.closest('.product-link');
             if (productLink) {
@@ -880,6 +1214,7 @@
             if (adminPasswordInput.value === ADMIN_PASSWORD) {
                 localStorage.setItem('isAdminLoggedIn', 'true');
                 adminLoginError.classList.add('hidden');
+                loginModal.classList.add('hidden');
                 showSection('admin-section');
             } else {
                 adminLoginError.classList.remove('hidden');
@@ -888,8 +1223,110 @@
 
         adminLogoutBtn.addEventListener('click', () => {
             localStorage.removeItem('isAdminLoggedIn');
+            showSection('products-link');
+        });
+        
+        dealersLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (dealersPasswordInput.value === DEALER_PASSWORD) {
+                localStorage.setItem('isDealerLoggedIn', 'true');
+                dealersLoginError.classList.add('hidden');
+                loginModal.classList.add('hidden');
+                showSection('dealers-section');
+            } else {
+                dealersLoginError.classList.remove('hidden');
+            }
+        });
+        
+        dealersLogoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isDealerLoggedIn');
+            showSection('products-link');
+        });
+
+        consumerSignupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = consumerSignupForm['signup-email'].value;
+            const password = consumerSignupForm['signup-password'].value;
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                showMessageBox('Account created successfully! You are now logged in.');
+                loginModal.classList.add('hidden');
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+            }
+        });
+
+        consumerLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = consumerLoginForm['login-email'].value;
+            const password = consumerLoginForm['login-password'].value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessageBox('Logged in successfully!');
+                loginModal.classList.add('hidden');
+            } catch (error) {
+                authErrorMessage.textContent = error.message;
+            }
+        });
+        
+        // OTP login events
+        let recaptchaVerifier;
+        otpLoginCard.querySelector('#send-otp-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            authErrorMessage.textContent = '';
+            const phoneNumber = phoneNumberInput.value;
+            if (!phoneNumber) {
+                authErrorMessage.textContent = 'Please enter a valid phone number.';
+                return;
+            }
+
+            try {
+                window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+                    'size': 'invisible',
+                    'callback': (response) => {
+                        // reCAPTCHA solved, continue with phone sign-in
+                    }
+                });
+                const appVerifier = window.recaptchaVerifier;
+                confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+                phoneInputContainer.classList.add('hidden');
+                otpInputContainer.classList.remove('hidden');
+                showMessageBox('OTP has been sent to your phone.');
+            } catch (error) {
+                console.error("Error sending OTP:", error);
+                authErrorMessage.textContent = error.message;
+            }
+        });
+
+        otpLoginCard.querySelector('#verify-otp-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            authErrorMessage.textContent = '';
+            const otpCode = otpCodeInput.value;
+            if (!otpCode) {
+                authErrorMessage.textContent = 'Please enter the verification code.';
+                return;
+            }
+            try {
+                await confirmationResult.confirm(otpCode);
+                showMessageBox('Logged in successfully!');
+                loginModal.classList.add('hidden');
+            } catch (error) {
+                console.error("Error verifying OTP:", error);
+                authErrorMessage.textContent = error.message;
+            }
+        });
+
+
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+            localStorage.removeItem('isAdminLoggedIn');
+            localStorage.removeItem('isDealerLoggedIn');
+            showMessageBox('You have been logged out.');
             showSection('product-gallery-section');
         });
+
 
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -990,7 +1427,7 @@
                 cart = {};
                 updateCartCount();
                 checkoutForm.reset();
-                showSection('product-gallery-section');
+                showSection('products-link');
             } catch (error) {
                 console.error("Error placing order: ", error);
                 showMessageBox('Failed to place order. Please try again.');
@@ -1125,10 +1562,21 @@
 
         // Initial rendering on page load
         document.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
+            renderApplianceList(); // Render the appliance list on page load
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    userId = user.uid;
+                    updateNavLinks(true);
+                    setupRealtimeListeners();
+                } else {
+                    userId = null;
+                    updateNavLinks(false);
+                    // Re-render the public view
+                    showSection('product-gallery-section');
+                }
+            });
             updateCartCount();
             document.querySelector('#filter-buttons .filter-button[data-filter="all"]').classList.add('active');
-            renderApplianceList(); // Render the appliance list on page load
         });
     </script>
 </body>
