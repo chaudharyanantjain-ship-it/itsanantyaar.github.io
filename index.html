@@ -411,15 +411,15 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // IMPORTANT: Replace these with your actual Firebase config from your project settings
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-          apiKey: "AIzaSyCuQEZZJplC6jWHlcTzbmuNhOYfvihpn5E",
-          authDomain: "chaudhary-cleanenergy-183a8.firebaseapp.com",
-          projectId: "chaudhary-cleanenergy-183a8",
-          storageBucket: "chaudhary-cleanenergy-183a8.firebasestorage.app",
-          messagingSenderId: "84964892092",
-          appId: "1:84964892092:web:eda197231667904f81dfb9",
-          measurementId: "G-N44TD7MXZK"
+            apiKey: "AIzaSyCuQEZZJplC6jWHlcTzbmuNhOYfvihpn5E",
+            authDomain: "chaudhary-cleanenergy-183a8.firebaseapp.com",
+            projectId: "chaudhary-cleanenergy-183a8",
+            storageBucket: "chaudhary-cleanenergy-183a8.firebasestorage.app",
+            messagingSenderId: "84964892092",
+            appId: "1:84964892092:web:eda197231667904f81dfb9",
+            measurementId: "G-N44TD7MXZK"
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -428,64 +428,7 @@
         
         // --- Static Website Data (Moved to Firebase in the script) ---
         // These are now just initial values. The app will use the DB.
-        let products = [
-            { 
-                id: 1, 
-                name: '550W Monocrystalline Solar Panel', 
-                price: 18500, 
-                category: 'solar', 
-                imageUrls: ['https://images.unsplash.com/photo-1549646440-c11f185c697b?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://images.unsplash.com/photo-1582268710574-e35f524c7f0d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'This high-efficiency solar panel is perfect for maximizing energy output in all weather conditions. Built with durable materials, it offers long-lasting performance for residential and commercial installations.'
-            },
-            { 
-                id: 2, 
-                name: '5kW Solar Inverter', 
-                price: 45000, 
-                category: 'solar', 
-                imageUrls: ['https://images.unsplash.com/photo-1563901967205-0219c6ce1992?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'Our 5kW solar inverter is designed for seamless integration into your solar system. It efficiently converts solar power into usable electricity, ensuring your home or business runs smoothly.'
-            },
-            { 
-                id: 3, 
-                name: '200Ah Solar Battery', 
-                price: 22000, 
-                category: 'solar', 
-                imageUrls: ['https://images.unsplash.com/photo-1598449339077-512534a65499?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'A powerful and reliable 200Ah solar battery for energy storage and backup. Perfect for ensuring you have power even when the sun isn\'t shining.'
-            },
-            { 
-                id: 4, 
-                name: 'Standard Solar Panel Mounting Structure', 
-                price: 8000, 
-                category: 'solar', 
-                imageUrls: ['https://images.unsplash.com/photo-1620216117970-d29b2f6f32e2?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'A durable and easy-to-install aluminum structure for mounting solar panels on your rooftop.'
-            },
-            { 
-                id: 5, 
-                name: '12V Automotive Battery', 
-                price: 5500, 
-                category: 'automotive', 
-                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'A reliable 12V battery for all your automotive needs, providing consistent power for your vehicle\'s engine and electrical system.'
-            },
-            { 
-                id: 6, 
-                name: '80Ah Car Battery', 
-                price: 7200, 
-                category: 'automotive', 
-                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'This 80Ah car battery offers superior performance and a long lifespan, ensuring your vehicle starts reliably in all conditions.'
-            },
-            { 
-                id: 7, 
-                name: 'Bike Battery', 
-                price: 1800, 
-                category: 'automotive', 
-                imageUrls: ['https://images.unsplash.com/photo-1621992982461-71ca53cc29e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
-                description: 'A compact and durable battery designed specifically for motorcycles and bikes, providing a dependable power source on the road.'
-            }
-        ];
+        let products = [];
         
         const ADMIN_PASSWORD = 'password123';
         let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
@@ -624,7 +567,7 @@
                 productCard.className = 'product-card';
                 productCard.innerHTML = `
                     <a href="#" class="product-link" data-product-id="${product.id}">
-                        <img src="${product.imageUrls[0]}" alt="${product.name}" class="w-full">
+                        <img src="${product.imageUrls[0]}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/e2e8f0?text=Image+Not+Found';" alt="${product.name}" class="w-full">
                     </a>
                     <div class="p-4">
                         <a href="#" class="product-link" data-product-id="${product.id}">
@@ -658,6 +601,7 @@
                 if (url) {
                     const img = document.createElement('img');
                     img.src = url;
+                    img.onerror = "this.onerror=null;this.src='https://placehold.co/100x100/e2e8f0/e2e8f0?text=Image+Not+Found';";
                     img.alt = `${product.name} thumbnail ${index + 1}`;
                     img.className = `w-16 h-16 rounded-md object-cover thumbnail-image ${index === 0 ? 'active' : ''}`;
                     img.dataset.url = url;
@@ -803,7 +747,7 @@
                     const itemElement = document.createElement('div');
                     itemElement.className = 'flex items-center py-3 border-b border-gray-200 last:border-b-0';
                     itemElement.innerHTML = `
-                        <img src="${item.imageUrl}" alt="${item.name}" class="w-16 h-16 rounded-md mr-4 object-cover">
+                        <img src="${item.imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e2e8f0/e2e8f0?text=Image+Not+Found';" alt="${item.name}" class="w-16 h-16 rounded-md mr-4 object-cover">
                         <div class="flex-1 text-sm">
                             <h4 class="font-semibold text-gray-800">${item.name}</h4>
                             <p class="text-gray-600">₹${item.price.toLocaleString('en-IN')} each</p>
