@@ -406,11 +406,29 @@
         &copy; 2025 Chaudhary Oil Agencies. All rights reserved.
     </footer>
 
-    <script>
-        const ADMIN_PASSWORD = 'password123';
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // IMPORTANT: Replace these with your actual Firebase config from your project settings
+        const firebaseConfig = {
+          apiKey: "AIzaSyCuQEZZJplC6jWHlcTzbmuNhOYfvihpn5E",
+          authDomain: "chaudhary-cleanenergy-183a8.firebaseapp.com",
+          projectId: "chaudhary-cleanenergy-183a8",
+          storageBucket: "chaudhary-cleanenergy-183a8.firebasestorage.app",
+          messagingSenderId: "84964892092",
+          appId: "1:84964892092:web:eda197231667904f81dfb9",
+          measurementId: "G-N44TD7MXZK"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let userId = 'anonymous'; // Default ID
         
-        // Local storage for products, cart, orders, and complaints
-        let products = JSON.parse(localStorage.getItem('products')) || [
+        // --- Static Website Data (Moved to Firebase in the script) ---
+        // These are now just initial values. The app will use the DB.
+        let products = [
             { 
                 id: 1, 
                 name: '550W Monocrystalline Solar Panel', 
@@ -469,9 +487,8 @@
             }
         ];
         
+        const ADMIN_PASSWORD = 'password123';
         let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
-        let orders = JSON.parse(localStorage.getItem('consumerOrders')) || [];
-        let complaints = JSON.parse(localStorage.getItem('customerComplaints')) || [];
         
         const cartCountElement = document.getElementById('cart-count');
         const productGallery = document.getElementById('product-gallery');
@@ -536,6 +553,40 @@
         });
         // --- End custom message box function ---
 
+        // Firebase Authentication and Data Listeners
+        signInAnonymously(auth).then((result) => {
+            userId = result.user.uid;
+            console.log("Signed in anonymously. User ID:", userId);
+            setupRealtimeListeners();
+        }).catch((error) => {
+            console.error("Anonymous sign-in failed:", error);
+        });
+
+        function setupRealtimeListeners() {
+            // Products Listener
+            onSnapshot(collection(db, 'products'), (snapshot) => {
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderProducts();
+                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                    renderAdminProducts();
+                }
+            });
+            // Orders Listener
+            onSnapshot(collection(db, 'orders'), (snapshot) => {
+                const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                    renderAdminOrders(orders);
+                }
+            });
+            // Complaints Listener
+            onSnapshot(collection(db, 'complaints'), (snapshot) => {
+                const complaints = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                    renderAdminComplaints(complaints);
+                }
+            });
+        }
+        
         const showSection = (sectionId) => {
             document.querySelectorAll('section').forEach(section => {
                 section.classList.add('hidden');
@@ -549,37 +600,12 @@
                 if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                     adminLoginPrompt.classList.add('hidden');
                     adminContent.classList.remove('hidden');
-                    renderAdminProducts();
-                    renderAdminOrders();
-                    renderAdminComplaints();
                 } else {
                     adminLoginPrompt.classList.remove('hidden');
                     adminContent.classList.add('hidden');
                     adminLoginError.classList.add('hidden');
                     adminLoginForm.reset();
                 }
-            }
-        };
-
-        const saveProducts = () => {
-            localStorage.setItem('products', JSON.stringify(products));
-            renderProducts();
-            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                renderAdminProducts();
-            }
-        };
-        
-        const saveOrders = () => {
-            localStorage.setItem('consumerOrders', JSON.stringify(orders));
-            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                renderAdminOrders();
-            }
-        };
-
-        const saveComplaints = () => {
-            localStorage.setItem('customerComplaints', JSON.stringify(complaints));
-            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                renderAdminComplaints();
             }
         };
 
@@ -660,7 +686,7 @@
             });
         };
         
-        const renderAdminOrders = () => {
+        const renderAdminOrders = (orders) => {
             adminOrdersList.innerHTML = '';
             if (orders.length === 0) {
                 noOrdersMessage.classList.remove('hidden');
@@ -691,7 +717,7 @@
             }
         };
 
-        const renderAdminComplaints = () => {
+        const renderAdminComplaints = (complaints) => {
             adminComplaintsList.innerHTML = '';
             if (complaints.length === 0) {
                 noComplaintsMessage.classList.remove('hidden');
@@ -920,10 +946,9 @@
             showSection('product-gallery-section');
         });
 
-        addProductForm.addEventListener('submit', (e) => {
+        addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const newProduct = {
-                id: Date.now(),
                 name: addProductForm['new-product-name'].value,
                 price: parseFloat(addProductForm['new-product-price'].value),
                 category: addProductForm['new-product-category'].value,
@@ -934,40 +959,57 @@
                 ].filter(url => url),
                 description: addProductForm['new-product-description'].value
             };
-            products.push(newProduct);
-            saveProducts();
-            addProductForm.reset();
-            showMessageBox('Product added successfully!');
+            
+            try {
+                await addDoc(collection(db, 'products'), newProduct);
+                addProductForm.reset();
+                showMessageBox('Product added successfully!');
+            } catch (error) {
+                console.error("Error adding product: ", error);
+                showMessageBox('Failed to add product. Check the console for details.');
+            }
         });
 
-        adminProductList.addEventListener('click', (e) => {
+        adminProductList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('delete-product-btn')) {
-                const productId = parseInt(e.target.dataset.productId);
-                products = products.filter(p => p.id !== productId);
-                saveProducts();
-                showMessageBox('Product deleted successfully!');
+                const productId = e.target.dataset.productId;
+                try {
+                    await deleteDoc(doc(db, 'products', productId));
+                    showMessageBox('Product deleted successfully!');
+                } catch (error) {
+                    console.error("Error deleting product: ", error);
+                    showMessageBox('Failed to delete product. Check the console for details.');
+                }
             }
         });
         
-        adminOrdersList.addEventListener('click', (e) => {
+        adminOrdersList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('delete-order-btn')) {
-                const orderId = parseInt(e.target.dataset.orderId);
-                orders = orders.filter(o => o.id !== orderId);
-                saveOrders();
-                showMessageBox('Order deleted successfully!');
+                const orderId = e.target.dataset.orderId;
+                try {
+                    await deleteDoc(doc(db, 'orders', orderId));
+                    showMessageBox('Order deleted successfully!');
+                } catch (error) {
+                    console.error("Error deleting order: ", error);
+                    showMessageBox('Failed to delete order. Check the console for details.');
+                }
             }
         });
 
-        adminComplaintsList.addEventListener('click', (e) => {
+        adminComplaintsList.addEventListener('click', async (e) => {
             if (e.target.classList.contains('delete-complaint-btn')) {
-                const complaintId = parseInt(e.target.dataset.complaintId);
-                complaints = complaints.filter(c => c.id !== complaintId);
-                saveComplaints();
-                showMessageBox('Complaint deleted successfully!');
+                const complaintId = e.target.dataset.complaintId;
+                try {
+                    await deleteDoc(doc(db, 'complaints', complaintId));
+                    showMessageBox('Complaint deleted successfully!');
+                } catch (error) {
+                    console.error("Error deleting complaint: ", error);
+                    showMessageBox('Failed to delete complaint. Check the console for details.');
+                }
             }
         });
 
-        checkoutForm.addEventListener('submit', (e) => {
+        checkoutForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const customerName = document.getElementById('name').value;
@@ -987,7 +1029,6 @@
             }
 
             const newOrder = {
-                id: Date.now(),
                 customerName: customerName,
                 email: customerEmail,
                 address: customerAddress,
@@ -996,19 +1037,22 @@
                 timestamp: new Date().toLocaleString()
             };
             
-            orders.push(newOrder);
-            saveOrders();
-
-            showMessageBox('Thank you for your order! It has been placed successfully.');
-            
-            localStorage.removeItem('solarCart');
-            cart = {};
-            updateCartCount();
-            checkoutForm.reset();
-            showSection('product-gallery-section');
+            try {
+                await addDoc(collection(db, 'orders'), newOrder);
+                showMessageBox('Thank you for your order! It has been placed successfully.');
+                
+                localStorage.removeItem('solarCart');
+                cart = {};
+                updateCartCount();
+                checkoutForm.reset();
+                showSection('product-gallery-section');
+            } catch (error) {
+                console.error("Error placing order: ", error);
+                showMessageBox('Failed to place order. Please try again.');
+            }
         });
         
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const contactName = document.getElementById('contact-name').value;
@@ -1016,18 +1060,20 @@
             const contactMessage = document.getElementById('contact-message').value;
 
             const newComplaint = {
-                id: Date.now(),
                 name: contactName,
                 email: contactEmail,
                 message: contactMessage,
                 timestamp: new Date().toLocaleString()
             };
 
-            complaints.push(newComplaint);
-            saveComplaints();
-            
-            showMessageBox('Thank you for your message! We will get back to you soon.');
-            contactForm.reset();
+            try {
+                await addDoc(collection(db, 'complaints'), newComplaint);
+                showMessageBox('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+            } catch (error) {
+                console.error("Error submitting complaint: ", error);
+                showMessageBox('Failed to submit complaint. Please try again.');
+            }
         });
 
         backToProductsBtn.addEventListener('click', () => {
