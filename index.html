@@ -163,9 +163,9 @@
 </head>
 <body class="p-6 md:p-12">
     <div class="max-w-7xl mx-auto">
-        <header class="header-bg rounded-lg mb-12 py-4 px-6 md:px-10 flex justify-between items-center">
+        <header class="header-bg rounded-lg mb-12 py-4 px-6 md:px-10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <h1 class="text-3xl md:text-4xl font-bold text-white">Chaudhary Oil Agencies</h1>
-            <nav class="flex items-center space-x-6">
+            <nav class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
                 <a href="#" class="nav-item" id="products-link">Products</a>
                 <a href="#" class="nav-item" id="calculator-link">Calculator</a>
                 <a href="#" class="nav-item" id="contact-link">Contact Us</a>
@@ -190,7 +190,7 @@
 
         <section id="product-details-section" class="hidden">
             <button id="back-to-products-btn" class="btn btn-secondary mb-8">&larr; Back to Products</button>
-            <div class="bg-white p-8 rounded-lg shadow-md md:flex md:space-x-8">
+            <div class="bg-white p-8 rounded-lg shadow-md flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
                 <div class="md:w-1/2">
                     <img id="product-main-image" src="" alt="" class="w-full h-auto rounded-lg mb-4">
                     <div id="product-thumbnails" class="flex space-x-2 overflow-x-auto">
@@ -208,7 +208,7 @@
 
         <section id="checkout-section" class="hidden mb-12">
             <h2 class="section-title">Checkout</h2>
-            <div class="form-container md:flex md:space-x-8">
+            <div class="form-container flex flex-col md:flex-row md:space-x-8 space-y-8 md:space-y-0">
                 <div class="md:w-1/2">
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
                     <div id="checkout-summary" class="space-y-4 text-base">
@@ -685,7 +685,7 @@
         };
 
         const addToCart = (productId) => {
-            const product = products.find(p => p.id == productId);
+            const product = products.find(p => product.id == productId);
             if (!product) return;
             
             if (cart[productId]) {
