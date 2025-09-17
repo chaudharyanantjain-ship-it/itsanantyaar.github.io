@@ -300,18 +300,6 @@
         <!-- Admin and Dealer Login/Dashboard Sections -->
         <section id="admin-section" class="hidden mb-12">
             <h2 class="section-title">Admin Dashboard</h2>
-            <div id="admin-login-prompt" class="form-container max-w-md mx-auto">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Owner Login</h3>
-                <form id="admin-login-form" class="space-y-4">
-                    <div>
-                        <label for="admin-password" class="block text-gray-700 font-medium mb-2">Password</label>
-                        <input type="password" id="admin-password" class="form-input" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full mt-4">Login to Admin</button>
-                    <p id="admin-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
-                </form>
-            </div>
-            
             <div id="admin-content" class="hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Products Management Card -->
@@ -361,6 +349,23 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Dealer Creation Form -->
+                <div class="form-container max-w-lg mx-auto mt-10">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Create New Dealer</h3>
+                    <form id="create-dealer-form" class="space-y-4">
+                        <div>
+                            <label for="dealer-email" class="block text-gray-700 font-medium mb-2">Dealer Email</label>
+                            <input type="email" id="dealer-email" class="form-input" required>
+                        </div>
+                        <div>
+                            <label for="dealer-password" class="block text-gray-700 font-medium mb-2">Password</label>
+                            <input type="password" id="dealer-password" class="form-input" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full mt-4">Create Dealer Account</button>
+                    </form>
+                    <div id="dealer-creation-error" class="text-red-500 text-sm mt-2 hidden text-center"></div>
+                </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
                     <!-- Consumer Orders Card -->
@@ -385,18 +390,6 @@
 
         <section id="dealers-section" class="hidden mb-12">
             <h2 class="section-title">Dealers Dashboard</h2>
-            <div id="dealers-login-prompt" class="form-container max-w-md mx-auto">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dealer Login</h3>
-                <form id="dealers-login-form" class="space-y-4">
-                    <div>
-                        <label for="dealers-password" class="block text-gray-700 font-medium mb-2">Password</label>
-                        <input type="password" id="dealers-password" class="form-input" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full mt-4">Login to Dealers</button>
-                    <p id="dealers-login-error" class="text-red-500 text-sm mt-2 hidden text-center">Incorrect password.</p>
-                </form>
-            </div>
-            
             <div id="dealers-content" class="hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
                     <!-- Consumer Orders Card for Dealers -->
@@ -530,6 +523,10 @@
                     <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Dealer Login</h3>
                     <form id="dealers-login-form" class="space-y-4">
                         <div>
+                            <label for="dealers-email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                            <input type="email" id="dealers-email" class="form-input" required>
+                        </div>
+                        <div>
                             <label for="dealers-password" class="block text-gray-700 font-medium mb-2">Password</label>
                             <input type="password" id="dealers-password" class="form-input" required>
                         </div>
@@ -559,7 +556,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
@@ -580,7 +577,6 @@
         let products = [];
         
         const ADMIN_PASSWORD = 'password123';
-        const DEALER_PASSWORD = 'dealer123';
         let cart = JSON.parse(localStorage.getItem('solarCart')) || {};
         
         const cartCountElement = document.getElementById('cart-count');
@@ -629,6 +625,9 @@
         const consumerLoginForm = document.getElementById('consumer-login-form');
         const consumerSignupForm = document.getElementById('consumer-signup-form');
         const authErrorMessage = document.getElementById('auth-error-message');
+        const loginErrorMsg = document.getElementById('login-error-message');
+        const signupErrorMsg = document.getElementById('signup-error-message');
+        const otpErrorMsg = document.getElementById('otp-error-message');
 
         const otpForm = document.getElementById('otp-form');
         const phoneNumberInput = document.getElementById('phone-number');
@@ -652,17 +651,11 @@
         const noOrdersMessage = document.getElementById('no-orders-message');
         const noComplaintsMessage = document.getElementById('no-complaints-message');
         const adminSection = document.getElementById('admin-section');
-        const adminLoginPrompt = document.getElementById('admin-login-prompt');
-        const adminLoginForm = document.getElementById('admin-login-form');
-        const adminPasswordInput = document.getElementById('admin-password');
-        const adminLoginError = document.getElementById('admin-login-error');
         const adminContent = document.getElementById('admin-content');
+        const createDealerForm = document.getElementById('create-dealer-form');
+        const createDealerError = document.getElementById('dealer-creation-error');
         const adminLogoutBtn = document.getElementById('admin-logout-btn');
         const dealersSection = document.getElementById('dealers-section');
-        const dealersLoginPrompt = document.getElementById('dealers-login-prompt');
-        const dealersLoginForm = document.getElementById('dealers-login-form');
-        const dealersPasswordInput = document.getElementById('dealers-password');
-        const dealersLoginError = document.getElementById('dealers-login-error');
         const dealersContent = document.getElementById('dealers-content');
         const dealersOrdersList = document.getElementById('dealers-orders-list');
         const dealersComplaintsList = document.getElementById('dealers-complaints-list');
@@ -684,39 +677,55 @@
         });
         // --- End custom message box function ---
 
-        function updateNavLinks(isAuthenticated) {
-            if (isAuthenticated) {
-                productsLink.classList.remove('hidden');
-                calculatorLink.classList.remove('hidden');
-                contactLink.classList.remove('hidden');
-                aboutLink.classList.remove('hidden');
+        function updateNavLinks(userRole) {
+            productsLink.classList.remove('hidden');
+            calculatorLink.classList.remove('hidden');
+            contactLink.classList.remove('hidden');
+            aboutLink.classList.remove('hidden');
+            adminLink.classList.add('hidden');
+            dealersLink.classList.add('hidden');
+            cartLink.classList.add('hidden');
+            logoutBtn.classList.add('hidden');
+            loginBtn.classList.remove('hidden');
+            
+            if (userRole === 'admin') {
+                loginBtn.classList.add('hidden');
+                adminLink.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            } else if (userRole === 'dealer') {
+                loginBtn.classList.add('hidden');
+                dealersLink.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            } else if (userRole === 'consumer') {
+                loginBtn.classList.add('hidden');
                 cartLink.classList.remove('hidden');
                 logoutBtn.classList.remove('hidden');
-                loginBtn.classList.add('hidden');
-                adminLink.classList.add('hidden');
-                dealersLink.classList.add('hidden');
-            } else {
-                productsLink.classList.remove('hidden');
-                calculatorLink.classList.remove('hidden');
-                contactLink.classList.remove('hidden');
-                aboutLink.classList.remove('hidden');
-                cartLink.classList.add('hidden');
-                logoutBtn.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
-                adminLink.classList.add('hidden');
-                dealersLink.classList.add('hidden');
             }
         }
-
-        onAuthStateChanged(auth, (user) => {
+        
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userId = user.uid;
-                updateNavLinks(true);
-                setupRealtimeListeners();
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', userId));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        updateNavLinks(userData.role);
+                        setupRealtimeListeners();
+                    } else {
+                        // Default role for new users
+                        await setDoc(doc(db, 'users', userId), { role: 'consumer' });
+                        updateNavLinks('consumer');
+                        setupRealtimeListeners();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role:", error);
+                    showMessageBox("Error getting user information. Please try again.");
+                    signOut(auth);
+                }
             } else {
                 userId = null;
-                updateNavLinks(false);
-                // Re-render the public view
+                updateNavLinks(null);
                 showSection('product-gallery-section');
             }
         });
@@ -726,29 +735,19 @@
             onSnapshot(collection(db, 'products'), (snapshot) => {
                 products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderProducts();
-                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                    renderAdminProducts();
-                }
+                renderAdminProducts();
             });
             // Orders Listener
             onSnapshot(collection(db, 'orders'), (snapshot) => {
                 const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                    renderAdminOrders(orders);
-                }
-                if (localStorage.getItem('isDealerLoggedIn') === 'true') {
-                    renderDealersOrders(orders);
-                }
+                renderAdminOrders(orders);
+                renderDealersOrders(orders);
             });
             // Complaints Listener
             onSnapshot(collection(db, 'complaints'), (snapshot) => {
                 const complaints = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                    renderAdminComplaints(complaints);
-                }
-                if (localStorage.getItem('isDealerLoggedIn') === 'true') {
-                    renderDealersComplaints(complaints);
-                }
+                renderAdminComplaints(complaints);
+                renderDealersComplaints(complaints);
             });
         }
         
@@ -760,28 +759,6 @@
             if (targetSection) {
                 targetSection.classList.remove('hidden');
             }
-
-            if (sectionId === 'admin-section') {
-                if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-                    adminLoginPrompt.classList.add('hidden');
-                    adminContent.classList.remove('hidden');
-                } else {
-                    adminLoginPrompt.classList.remove('hidden');
-                    adminContent.classList.add('hidden');
-                    adminLoginError.classList.add('hidden');
-                    adminLoginForm.reset();
-                }
-            } else if (sectionId === 'dealers-section') {
-                 if (localStorage.getItem('isDealerLoggedIn') === 'true') {
-                    dealersLoginPrompt.classList.add('hidden');
-                    dealersContent.classList.remove('hidden');
-                } else {
-                    dealersLoginPrompt.classList.remove('hidden');
-                    dealersContent.classList.add('hidden');
-                    dealersLoginError.classList.add('hidden');
-                    dealersLoginForm.reset();
-                }
-            }
         };
 
         const renderProducts = (filter = 'all') => {
@@ -791,7 +768,7 @@
             });
         
             if (filteredProducts.length === 0) {
-                productGallery.innerHTML = `<p class="text-center text-gray-600 text-lg col-span-full">No products found in this category.</p>`;
+                productGallery.innerHTML = `<p class="text-center text-gray-600 text-lg col-span-full">No products found in this category. Please add some from the Admin Dashboard.</p>`;
             }
         
             filteredProducts.forEach(product => {
@@ -861,7 +838,7 @@
                 adminProductList.appendChild(productItem);
             });
         };
-        
+
         const renderAdminOrders = (orders) => {
             adminOrdersList.innerHTML = '';
             if (orders.length === 0) {
@@ -914,7 +891,7 @@
                 });
             }
         };
-        
+
         const renderDealersOrders = (orders) => {
             dealersOrdersList.innerHTML = '';
             if (orders.length === 0) {
@@ -1209,11 +1186,12 @@
             showSection('checkout-section');
         });
         
-        adminLoginForm.addEventListener('submit', (e) => {
+        adminLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (adminPasswordInput.value === ADMIN_PASSWORD) {
+            const password = adminPasswordInput.value;
+            if (password === ADMIN_PASSWORD) {
+                // For admin, we use a fixed password but still track login state
                 localStorage.setItem('isAdminLoggedIn', 'true');
-                adminLoginError.classList.add('hidden');
                 loginModal.classList.add('hidden');
                 showSection('admin-section');
             } else {
@@ -1221,26 +1199,55 @@
             }
         });
 
-        adminLogoutBtn.addEventListener('click', () => {
+        adminLogoutBtn.addEventListener('click', async () => {
             localStorage.removeItem('isAdminLoggedIn');
             showSection('products-link');
         });
         
-        dealersLoginForm.addEventListener('submit', (e) => {
+        dealersLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (dealersPasswordInput.value === DEALER_PASSWORD) {
-                localStorage.setItem('isDealerLoggedIn', 'true');
-                dealersLoginError.classList.add('hidden');
-                loginModal.classList.add('hidden');
-                showSection('dealers-section');
-            } else {
+            const email = dealersLoginForm['dealers-email'].value;
+            const password = dealersLoginForm['dealers-password'].value;
+            
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+                if (userDoc.exists() && userDoc.data().role === 'dealer') {
+                    localStorage.setItem('isDealerLoggedIn', 'true');
+                    dealersLoginError.classList.add('hidden');
+                    loginModal.classList.add('hidden');
+                    showSection('dealers-section');
+                } else {
+                    await signOut(auth);
+                    dealersLoginError.textContent = "Invalid email or password.";
+                    dealersLoginError.classList.remove('hidden');
+                }
+            } catch (error) {
+                dealersLoginError.textContent = error.message;
                 dealersLoginError.classList.remove('hidden');
             }
         });
         
         dealersLogoutBtn.addEventListener('click', () => {
+            signOut(auth);
             localStorage.removeItem('isDealerLoggedIn');
             showSection('products-link');
+        });
+
+        createDealerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            createDealerError.classList.add('hidden');
+            const email = createDealerForm['dealer-email'].value;
+            const password = createDealerForm['dealer-password'].value;
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'dealer' });
+                createDealerForm.reset();
+                showMessageBox(`Dealer account created successfully for ${email}.`);
+            } catch (error) {
+                createDealerError.textContent = error.message;
+                createDealerError.classList.remove('hidden');
+            }
         });
 
         consumerSignupForm.addEventListener('submit', async (e) => {
