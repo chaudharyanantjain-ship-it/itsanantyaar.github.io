@@ -731,17 +731,18 @@
                 const userDoc = await getDoc(doc(db, 'users', userId));
                 let userRole = userDoc.exists() ? userDoc.data().role : 'consumer';
                 updateNavLinks(userRole);
+                
+                // Show content based on role
+                document.getElementById('admin-content').classList.add('hidden');
+                document.getElementById('dealers-content').classList.add('hidden');
+                
                 if (userRole === 'admin') {
                     document.getElementById('admin-content').classList.remove('hidden');
-                    document.getElementById('dealers-content').classList.add('hidden');
                     showSection('admin-section');
                 } else if (userRole === 'dealer') {
                     document.getElementById('dealers-content').classList.remove('hidden');
-                    document.getElementById('admin-content').classList.add('hidden');
                     showSection('dealers-section');
                 } else {
-                    document.getElementById('admin-content').classList.add('hidden');
-                    document.getElementById('dealers-content').classList.add('hidden');
                     showSection('product-gallery-section');
                 }
                 setupRealtimeListeners();
@@ -1232,30 +1233,33 @@
             const password = document.getElementById('admin-password').value;
             const adminLoginError = document.getElementById('admin-login-error');
             adminLoginError.classList.add('hidden');
-            if (password === 'password123') {
+            
+            if (password === ADMIN_PASSWORD) {
+                const adminEmail = 'admin@yourcompany.com';
+                const adminPass = 'admin_password_placeholder'; // Internal Admin Pass
+
                 try {
-                    const adminEmail = 'admin@yourcompany.com';
-                    const adminPass = 'admin_password_placeholder';
-                    await signInWithEmailAndPassword(auth, adminEmail, adminPass);
-                    await setDoc(doc(db, 'users', auth.currentUser.uid), { role: 'admin' }, { merge: true });
+                    // Step 1: Sign in or create a dedicated Admin user in Firebase Auth
+                    let userCredential;
+                    try {
+                        userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
+                    } catch (signInError) {
+                        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
+                            userCredential = await createUserWithEmailAndPassword(auth, adminEmail, adminPass);
+                        } else {
+                            throw signInError; // Throw any other unexpected error
+                        }
+                    }
+                    
+                    // 2. Set the 'admin' role in Firestore (ensures proper dashboard loading via onAuthStateChanged)
+                    await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' }, { merge: true });
+                    
                     loginModal.classList.add('hidden');
                     showMessageBox('Admin logged in successfully!');
                 } catch (error) {
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                        try {
-                           const userCredential = await createUserWithEmailAndPassword(auth, 'admin@yourcompany.com', 'admin_password_placeholder');
-                           await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' });
-                           showMessageBox('Admin account created and logged in successfully!');
-                           loginModal.classList.add('hidden');
-                        } catch (creationError) {
-                            adminLoginError.textContent = 'Error logging in as admin. Check the console for details.';
-                            adminLoginError.classList.remove('hidden');
-                            console.error("Admin creation failed:", creationError);
-                        }
-                    } else {
-                        adminLoginError.textContent = error.message;
-                        adminLoginError.classList.remove('hidden');
-                    }
+                    adminLoginError.textContent = 'Login failed. Please check the console for details.';
+                    adminLoginError.classList.remove('hidden');
+                    console.error("Admin Login Error:", error);
                 }
             } else {
                 adminLoginError.textContent = 'Incorrect password.';
