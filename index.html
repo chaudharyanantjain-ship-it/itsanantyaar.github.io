@@ -16,7 +16,7 @@
             background-color: #0d47a1; /* Darker blue for header */
             color: #ffffff;
             padding: 1rem 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1-px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .nav-item {
             position: relative;
@@ -732,16 +732,24 @@
                 let userRole = userDoc.exists() ? userDoc.data().role : 'consumer';
                 updateNavLinks(userRole);
                 if (userRole === 'admin') {
+                    document.getElementById('admin-content').classList.remove('hidden');
+                    document.getElementById('dealers-content').classList.add('hidden');
                     showSection('admin-section');
                 } else if (userRole === 'dealer') {
+                    document.getElementById('dealers-content').classList.remove('hidden');
+                    document.getElementById('admin-content').classList.add('hidden');
                     showSection('dealers-section');
                 } else {
+                    document.getElementById('admin-content').classList.add('hidden');
+                    document.getElementById('dealers-content').classList.add('hidden');
                     showSection('product-gallery-section');
                 }
                 setupRealtimeListeners();
             } else {
                 userId = null;
                 updateNavLinks(null);
+                document.getElementById('admin-content').classList.add('hidden');
+                document.getElementById('dealers-content').classList.add('hidden');
                 showSection('product-gallery-section');
             }
         });
@@ -1552,6 +1560,52 @@
             }
         });
 
+        // Appliance data with typical wattage
+        const appliances = [
+            { name: "Light Bulb (LED)", wattage: 10, count: 0 },
+            { name: "Ceiling Fan", wattage: 75, count: 0 },
+            { name: "Television (LED)", wattage: 100, count: 0 },
+            { name: "Refrigerator", wattage: 150, count: 0 },
+            { name: "Laptop", wattage: 50, count: 0 },
+            { name: "Air Conditioner (1.5 Ton)", wattage: 1500, count: 0 },
+            { name: "Water Pump (1 HP)", wattage: 750, count: 0 },
+            { name: "Washing Machine", wattage: 2000, count: 0 },
+            { name: "Water Heater", wattage: 3000, count: 0 },
+            { name: "Microwave Oven", wattage: 1200, count: 0 },
+        ];
+
+        // Function to render the appliance list
+        const renderApplianceList = () => {
+            document.getElementById('appliance-list').innerHTML = appliances.map(appliance => {
+                const idSlug = appliance.name.toLowerCase().replace(/[\s\(\)]/g, '-').replace(/[-]{2,}/g, '-');
+                return `
+                <div class="flex items-center space-x-4">
+                    <label class="flex-1 flex items-center text-gray-700">
+                        <input type="checkbox" name="appliance" value="${appliance.wattage}" class="form-checkbox h-5 w-5 text-blue-600 rounded" data-appliance-name="${appliance.name}">
+                        <span class="ml-2">${appliance.name} (${appliance.wattage}W)</span>
+                    </label>
+                    <div class="flex items-center space-x-2">
+                        <label for="quantity-${idSlug}" class="text-sm font-medium text-gray-500">Qty:</label>
+                        <input type="number" id="quantity-${idSlug}" class="form-input w-20 text-center" value="1" min="1" disabled>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        };
+
+        // Event listener for checkbox changes to enable/disable quantity input
+        document.getElementById('appliance-list').addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox' && e.target.name === 'appliance') {
+                const idSlug = e.target.dataset.applianceName.toLowerCase().replace(/[\s\(\)]/g, '-').replace(/[-]{2,}/g, '-');
+                const quantityInput = document.getElementById(`quantity-${idSlug}`);
+                quantityInput.disabled = !e.target.checked;
+                if(e.target.checked) {
+                    quantityInput.value = '1';
+                }
+            }
+        });
+
+        // Event listener for the new solar calculator form
         document.getElementById('solar-calculator-form').addEventListener('submit', (e) => {
             e.preventDefault();
             let totalLoadWatts = 0;
