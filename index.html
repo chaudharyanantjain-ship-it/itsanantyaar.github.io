@@ -559,7 +559,7 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, RecaptchaVerifier, signInWithPhoneNumber, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -1233,31 +1233,33 @@
             const password = document.getElementById('admin-password').value;
             const adminLoginError = document.getElementById('admin-login-error');
             adminLoginError.classList.add('hidden');
-            
             if (password === ADMIN_PASSWORD) {
-                const adminEmail = 'admin@yourcompany.com';
-                const adminPass = 'admin_password_placeholder'; // Internal Admin Pass
-
                 try {
-                    // Step 1: Sign in or create a dedicated Admin user in Firebase Auth
+                    const adminEmail = 'admin@yourcompany.com';
+                    const adminPass = 'admin_password_placeholder'; // Internal Admin Pass
+
+                    // Step 1: Sign in or create the Admin user internally
                     let userCredential;
                     try {
                         userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
                     } catch (signInError) {
+                        // If sign-in fails (user not found or wrong internal pass), create the user
                         if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/wrong-password') {
                             userCredential = await createUserWithEmailAndPassword(auth, adminEmail, adminPass);
                         } else {
-                            throw signInError; // Throw any other unexpected error
+                            // If user is logged in, log them out and retry
+                            await signOut(auth);
+                            userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPass);
                         }
                     }
                     
-                    // 2. Set the 'admin' role in Firestore (ensures proper dashboard loading via onAuthStateChanged)
+                    // 2. Set the 'admin' role in Firestore
                     await setDoc(doc(db, 'users', userCredential.user.uid), { role: 'admin' }, { merge: true });
                     
                     loginModal.classList.add('hidden');
                     showMessageBox('Admin logged in successfully!');
                 } catch (error) {
-                    adminLoginError.textContent = 'Login failed. Please check the console for details.';
+                    adminLoginError.textContent = 'Login failed. Check console for details.';
                     adminLoginError.classList.remove('hidden');
                     console.error("Admin Login Error:", error);
                 }
